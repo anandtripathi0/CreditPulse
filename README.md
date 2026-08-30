@@ -36,7 +36,6 @@ CreditPulse is a modern FinTech web application designed to automate and streaml
 ---
 
 ## 📂 Project Structure
-
 ```text
 credit_wise_loan/
 │
@@ -61,8 +60,8 @@ credit_wise_loan/
 ├── dataset/                  # Raw and preprocessed CSV data
 ├── requirements.txt          # Python dependencies
 └── README.md
-
-## 👨‍💻 Author
+```
+## 👨‍💻Author
 
 **Anand Tripathi**  
 *Bachelor of Computer Applications (BCA)*
