@@ -134,3 +134,19 @@ if (openChatBtn && chatBox) {
     chatMessages.scrollTop = chatMessages.scrollHeight;
   });
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+  const sendBtn = document.getElementById("sendBtn");
+  const chatInput = document.getElementById("chatInput");
+  
+  if (sendBtn && !sendBtn.hasAttribute('data-bound')) {
+    sendBtn.setAttribute('data-bound', 'true');
+    sendBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      const chatForm = document.getElementById("chatForm");
+      if (chatForm) {
+        chatForm.dispatchEvent(new Event("submit", { cancelable: true, bubbles: true }));
+      }
+    });
+  }
+});
