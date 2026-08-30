@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{% block title %}CreditPulse Loan System{% endblock %}</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> 
+  <link rel="stylesheet" href="/static/css/style.css">
+  
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <nav class="bg-white border-b border-[#E2E8E4] sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+      <div class="flex items-center space-x-3">
+        <div class="w-9 h-9 rounded-lg bg-[#2E5A44] flex items-center justify-center text-white font-semibold text-lg">
+          CP
+        </div>
+        <span class="text-xl font-bold text-[#1F2E26] tracking-tight">CredPulse</span>
+      </div>
+      <div class="flex space-x-6 text-sm font-medium">
+        <a href="/" class="text-[#5C6E64] hover:text-[#2E5A44] transition" style="margin-left: 20px;">Application Form</a>
+        <a href="/dashboard" class="text-[#5C6E64] hover:text-[#2E5A44] transition">Records & Analytics</a>
+      </div>
+    </div>
+  </nav>
+
+
+  <main class="flex-grow max-w-6xl w-full mx-auto px-4 py-8">
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="bg-white border-t border-[#E2E8E4] py-6 text-center text-xs text-[#5C6E64]">
+    <p>&copy; 2026 CreditPulse Financial Analytics. All rights reserved.</p>
+  </footer>
+
+  {% block scripts %}{% endblock %}
+</body>
+</html>

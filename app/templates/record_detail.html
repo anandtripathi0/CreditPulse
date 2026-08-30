@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Record Analytics - CreditPulse{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-6">
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-[#1F2E26]">Application Analytics</h1>
+        <a href="/dashboard" class="btn-sage px-4 py-2 rounded-lg text-xs">Back to Dashboard</a>
+    </div>
+
+    <div class="custom-card p-6 rounded-2xl grid grid-cols-2 gap-4">
+        <div>
+            <p class="text-sm text-gray-500">Status</p>
+            <p class="text-xl font-bold {% if record.prediction.status == 'Approved' %}text-emerald-600{% else %}text-rose-600{% endif %}">
+                {{ record.prediction.status }}
+            </p>
+        </div>
+        <div>
+            <p class="text-sm text-gray-500">AI Confidence</p>
+            <p class="text-xl font-bold text-[#2E5A44]">{{ (record.prediction.probability * 100) | round(2) }}%</p>
+        </div>
+        <div>
+            <p class="text-sm text-gray-500">Applicant Income</p>
+            <p class="font-semibold">₹{{ record.applicant_data.Applicant_Income }}</p>
+        </div>
+        <div>
+            <p class="text-sm text-gray-500">Credit Score</p>
+            <p class="font-semibold">{{ record.applicant_data.Credit_Score }}</p>
+        </div>
+        
+    </div>
+</div>
+
+
+<div id="chatWidget" class="fixed bottom-6 right-6 z-50">
+    <button id="openChatBtn" class="btn-sage w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-white focus:outline-none transition-transform hover:scale-105">
+      Ask AI
+    </button>
+  
+    <div id="chatBox" class="hidden custom-card w-80 md:w-96 rounded-2xl shadow-2xl flex flex-col h-[460px] bg-white border border-[#E2E8E4]">
+      <div class="bg-[#2E5A44] text-white p-4 flex justify-between items-center">
+        <div>
+          <h3 class="font-semibold text-sm">Record specific AI Help</h3>
+        </div>
+        <button id="closeChatBtn" class="text-white hover:text-gray-200 text-2xl leading-none">&times;</button>
+      </div>
+  
+      <div id="chatMessages" class="flex-grow p-4 overflow-y-auto space-y-3 text-xs bg-[#FAFCFA]">
+        <div class="bg-white border border-[#E2E8E4] p-3 rounded-lg text-[#1F2E26] shadow-sm">
+          Hi! I have the data for this specific application open. <strong>Is record se related aapko kya janna hai?</strong> (Why it was rejected, how to improve, etc.)
+        </div>
+      </div>
+  
+      <form id="chatForm" action="#" onsubmit="return false;" class="p-3 border-t border-[#E2E8E4] flex gap-2 bg-white">
+        <input type="text" id="chatInput" placeholder="Ask about this record..." class="input-sage flex-grow px-3 py-2 rounded-lg text-xs" autocomplete="off" required />
+        <button type="button" id="sendBtn" class="btn-sage px-3 py-2 rounded-lg text-xs font-semibold">Send</button>
+      </form>
+    </div>
+</div>
+
+<script id="recordData" type="application/json">
+  {{ record.applicant_data | tojson | safe }}
+</script>
+
+<script>
+    const rawData = document.getElementById('recordData').textContent;
+    sessionStorage.setItem('last_application', rawData);
+    
+    sessionStorage.setItem('app_status', '{{ record.prediction.status }}');
+    sessionStorage.setItem('app_prob', '{{ record.prediction.probability }}');
+</script>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/main.js"></script>
+{% endblock %}

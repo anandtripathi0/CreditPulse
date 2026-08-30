@@ -1,0 +1,84 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard - CreditPulse{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+  <div>
+    <h1 class="text-2xl font-bold text-[#1F2E26] tracking-tight">Records & Analytics</h1>
+    <p class="text-sm text-[#5C6E64] mt-1">Review historical evaluated applications and automated decisions.</p>
+  </div>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="custom-card p-6 rounded-xl">
+      <h3 class="text-xs font-bold uppercase tracking-wider text-[#5C6E64] mb-4">Approval vs Rejection Ratio</h3>
+      <div class="h-56">
+        <canvas id="approvalChart"></canvas>
+      </div>
+    </div>
+    <div class="custom-card p-6 rounded-xl">
+      <h3 class="text-xs font-bold uppercase tracking-wider text-[#5C6E64] mb-4">Loan Purpose Distribution</h3>
+      <div class="h-56">
+        <canvas id="purposeChart"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <div class="custom-card rounded-xl overflow-hidden">
+    <div class="px-6 py-4 border-b border-[#E2E8E4] flex justify-between items-center bg-[#FAFCFA]">
+      <span class="text-xs font-bold uppercase tracking-wider text-[#1F2E26]">Evaluated Applications Log</span>
+      <span class="text-xs text-[#5C6E64]">{{ applications|length }} total entries</span>
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-left text-xs text-[#1F2E26]">
+        <thead class="bg-[#FAFCFA] text-[#5C6E64] border-b border-[#E2E8E4] uppercase font-semibold">
+          <tr>
+            <th class="px-6 py-3">Income</th>
+            <th class="px-6 py-3">Score</th>
+            <th class="px-6 py-3">Loan Amount</th>
+            <th class="px-6 py-3">Purpose</th>
+            <th class="px-6 py-3">Probability</th>
+            <th class="px-6 py-3">Decision</th>
+            
+            <th class="px-6 py-3 text-right">Action</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-[#E2E8E4]">
+          {% for app in applications %}
+          <tr class="hover:bg-[#F4F7F5] transition">
+            <td class="px-6 py-3.5 font-medium">₹{{ app.applicant_data.Applicant_Income }}</td>
+            <td class="px-6 py-3.5">{{ app.applicant_data.Credit_Score }}</td>
+            <td class="px-6 py-3.5">₹{{ app.applicant_data.Loan_Amount }}</td>
+            <td class="px-6 py-3.5">{{ app.applicant_data.Loan_Purpose }}</td>
+            <td class="px-6 py-3.5">{{ (app.prediction.probability * 100) | round(1) }}%</td>
+            <td class="px-6 py-3.5">
+              <span class="px-2.5 py-1 rounded-full text-[11px] font-semibold {% if app.prediction.status == 'Approved' %}bg-emerald-100 text-emerald-800{% else %}bg-rose-100 text-rose-800{% endif %}">
+                {{ app.prediction.status }}
+              </span>
+            </td>
+            
+            <td class="px-6 py-3.5 text-right">
+              <a href="/record/{{ app._id }}" class="text-[#2E5A44] font-bold hover:underline flex items-center justify-end gap-1">
+                View Data & AI 
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+              </a>
+            </td>
+          </tr>
+          {% else %}
+          <tr>
+            <td colspan="7" class="px-6 py-8 text-center text-[#5C6E64]">No evaluated applications stored yet.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script id="appData" type="application/json">
+  {{ applications | tojson | safe }}
+</script>
+<script src="/static/js/dashboard.js"></script>
+{% endblock %}

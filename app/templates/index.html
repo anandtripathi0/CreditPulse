@@ -1,0 +1,150 @@
+{% extends "base.html" %}
+
+{% block title %}Loan Application - CreditPulse{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto">
+  <div class="mb-8 text-center">
+    <h1 class="text-2xl font-bold text-[#1F2E26] tracking-tight">Loan Eligibility Assessment</h1>
+    <p class="text-sm text-[#5C6E64] mt-1">Fill in the applicant's financial and demographic details to evaluate risk.</p>
+  </div>
+
+  <form id="loanForm" class="custom-card rounded-2xl p-8 space-y-8">
+    
+    <div>
+      <h2 class="text-sm font-semibold uppercase tracking-wider text-[#2E5A44] mb-4 pb-2 border-b border-[#E2E8E4]">
+        1. Personal & Employment Information
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div>
+          <label class="block text-xs font-medium text-[#5C6E64] mb-1">Gender</label>
+          <select name="Gender" class="input-sage w-full rounded-lg px-3 py-2 text-sm" required>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-[#5C6E64] mb-1">Age (Years)</label>
+          <input type="number" name="Age" min="18" max="80" value="35" class="input-sage w-full rounded-lg px-3 py-2 text-sm" required>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-[#5C6E64] mb-1">Marital Status</label>
+          <select name="Marital_Status" class="input-sage w-full rounded-lg px-3 py-2 text-sm" required>
+            <option value="Single">Single</option>
+            <option value="Married">Married</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-[#5C6E64] mb-1">Dependents</label>
+          <input type="number" name="Dependents" min="0" max="10" value="1" class="input-sage w-full rounded-lg px-3 py-2 text-sm" required>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-[#5C6E64] mb-1">Education Level</label>
+          <select name="Education_Level" class="input-sage w-full rounded-lg px-3 py-2 text-sm" required>
+            <option value="Graduate">Graduate</option>
+            <option value="Not Graduate">Not Graduate</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-[#5C6E64] mb-1">Employment Status</label>
+          <select name="Employment_Status" class="input-sage w-full rounded-lg px-3 py-2 text-sm" required>
+            <option value="Salaried">Salaried</option>
+            <option value="Self-employed">Self-employed</option>
+            <option value="Contract">Contract</option>
+            <option value="Unemployed">Unemployed</option>
+          </select>
+        </div>
+        <div class="md:col-span-3">
+          <label class="block text-xs font-medium text-[#5C6E64] mb-1">Employer Category</label>
+          <select name="Employer_Category" class="input-sage w-full rounded-lg px-3 py-2 text-sm" required>
+            <option value="Private">Private Sector</option>
+            <option value="Government">Government / Public Sector</option>
+            <option value="MNC">Multinational Corporation (MNC)</option>
+            <option value="Unemployed">None / Unemployed</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-semibold uppercase tracking-wider text-[#2E5A44] mb-4 pb-2 border-b border-[#E2E8E4]">
+        2. Financial Profile & Stability
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div>
+          <label class="block text-xs font-medium text-[#5C6E64] mb-1">Applicant Income (₹ / month)</label>
+          <input type="number" name="Applicant_Income" step="100" value="12000" class="input-sage w-full rounded-lg px-3 py-2 text-sm" required>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-[#5C6E64] mb-1">Co-applicant Income (₹ / month)</label>
+          <input type="number" name="Coapplicant_Income" step="100" value="3000" class="input-sage w-full rounded-lg px-3 py-2 text-sm" required>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-[#5C6E64] mb-1">Credit Score (300 - 900)</label>
+          <input type="number" name="Credit_Score" min="300" max="900" value="680" class="input-sage w-full rounded-lg px-3 py-2 text-sm" required>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-[#5C6E64] mb-1">Existing Running Loans</label>
+          <input type="number" name="Existing_Loans" min="0" max="10" value="1" class="input-sage w-full rounded-lg px-3 py-2 text-sm" required>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-[#5C6E64] mb-1">Debt-to-Income (DTI) Ratio</label>
+          <input type="number" step="0.01" name="DTI_Ratio" min="0.0" max="1.0" value="0.30" class="input-sage w-full rounded-lg px-3 py-2 text-sm" required>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-[#5C6E64] mb-1">Savings Balance (₹)</label>
+          <input type="number" name="Savings" step="500" value="15000" class="input-sage w-full rounded-lg px-3 py-2 text-sm" required>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <h2 class="text-sm font-semibold uppercase tracking-wider text-[#2E5A44] mb-4 pb-2 border-b border-[#E2E8E4]">
+        3. Loan Request & Property
+      </h2>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div>
+          <label class="block text-xs font-medium text-[#5C6E64] mb-1">Requested Loan Amount (₹)</label>
+          <input type="number" name="Loan_Amount" step="1000" value="25000" class="input-sage w-full rounded-lg px-3 py-2 text-sm" required>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-[#5C6E64] mb-1">Loan Term (Months)</label>
+          <input type="number" name="Loan_Term" value="48" class="input-sage w-full rounded-lg px-3 py-2 text-sm" required>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-[#5C6E64] mb-1">Collateral Value (₹)</label>
+          <input type="number" name="Collateral_Value" step="1000" value="30000" class="input-sage w-full rounded-lg px-3 py-2 text-sm" required>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-[#5C6E64] mb-1">Loan Purpose</label>
+          <select name="Loan_Purpose" class="input-sage w-full rounded-lg px-3 py-2 text-sm" required>
+            <option value="Personal">Personal</option>
+            <option value="Home">Home</option>
+            <option value="Business">Business</option>
+            <option value="Education">Education</option>
+            <option value="Car">Car</option>
+          </select>
+        </div>
+        <div class="md:col-span-2">
+          <label class="block text-xs font-medium text-[#5C6E64] mb-1">Property Area</label>
+          <select name="Property_Area" class="input-sage w-full rounded-lg px-3 py-2 text-sm" required>
+            <option value="Urban">Urban</option>
+            <option value="Semiurban">Semi-Urban</option>
+            <option value="Rural">Rural</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="pt-4">
+      <button type="submit" id="submitBtn" class="btn-sage w-full py-3 rounded-lg text-sm font-semibold tracking-wide flex items-center justify-center space-x-2">
+        <span>Evaluate Application</span>
+      </button>
+    </div>
+  </form>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/js/main.js"></script>
+{% endblock %}

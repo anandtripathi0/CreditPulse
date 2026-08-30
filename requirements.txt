@@ -1,0 +1,26 @@
+# FastAPI & Web Server
+fastapi>=0.111.0
+uvicorn[standard]>=0.30.0
+jinja2>=3.1.4
+python-multipart>=0.0.9
+
+# Data Validation & Settings
+pydantic>=2.7.0
+pydantic-settings>=2.3.0
+python-dotenv>=1.0.1
+
+# Database (MongoDB Atlas Async)
+motor>=3.4.0
+pymongo[srv]>=4.7.0
+dnspython>=2.6.0
+
+# Machine Learning & Data Processing
+numpy>=1.26.0
+pandas>=2.2.0
+scikit-learn>=1.4.0
+xgboost>=2.0.0
+joblib>=1.4.0
+
+# Evaluation & Plotting
+matplotlib>=3.8.0
+seaborn>=0.13.0
