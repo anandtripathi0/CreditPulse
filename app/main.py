@@ -30,16 +30,15 @@ templates = Jinja2Templates(directory="app/templates")
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
-    """Renders the main loan application form."""
     return templates.TemplateResponse(
         request=request, 
-        name="index.html"
+        name="home.html"
     )
 
 
 @app.post("/api/predict")
 async def predict_loan(application: LoanApplicationInput):
-    """API Endpoint to get prediction and save to MongoDB."""
+    
     data = application.model_dump()
 
     status, prob = await asyncio.to_thread(get_loan_prediction, data)
@@ -59,7 +58,7 @@ async def predict_loan(application: LoanApplicationInput):
 
 @app.get("/dashboard", response_class=HTMLResponse)
 async def dashboard(request: Request):
-    """Renders the dashboard with past applications from MongoDB."""
+
     cursor = application_collection.find().sort("created_at", -1).limit(50)
     raw_applications = await cursor.to_list(length=50)
 
@@ -79,7 +78,6 @@ async def dashboard(request: Request):
 
 @app.get("/result", response_class=HTMLResponse)
 async def view_result(request: Request, status: str = "Rejected", prob: float = 0.0):
-    """Renders the single application assessment outcome."""
     return templates.TemplateResponse(
         request=request,
         name="result.html",
@@ -88,7 +86,6 @@ async def view_result(request: Request, status: str = "Rejected", prob: float = 
 
 @app.post("/api/chat",response_model=ChatResponse)
 async def chat_with_advisor(payload:ChatRequest):
-    """Answers user queries and advises on how to improve loan eligibility."""
     reply = generate_loan_advice(
         user_message=payload.user_message,
         applicant_data=payload.applicant_data,
@@ -99,7 +96,7 @@ async def chat_with_advisor(payload:ChatRequest):
 
 @app.get("/record/{record_id}", response_class=HTMLResponse)
 async def view_single_record(request: Request, record_id: str):
-    """Fetches a specific loan application from MongoDB and shows its detailed analytics."""
+    
     try:
         # Fetch data based on MongoDB ID
         record = await application_collection.find_one({"_id": ObjectId(record_id)})
@@ -122,8 +119,14 @@ async def view_single_record(request: Request, record_id: str):
 
 @app.get("/help-center", response_class=HTMLResponse)
 async def help_center(request: Request):
-    """Renders a dedicated full-page AI Help Center for general queries."""
     return templates.TemplateResponse(
         request=request, 
         name="help_center.html"
+    )
+
+@app.get("/application",response_class = HTMLResponse)
+async def home(request:Request):
+    return templates.TemplateResponse(
+        request=request,
+        name="index.html"
     )
