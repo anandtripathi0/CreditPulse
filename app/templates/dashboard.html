@@ -39,7 +39,7 @@
             <th class="px-6 py-3">Purpose</th>
             <th class="px-6 py-3">Probability</th>
             <th class="px-6 py-3">Decision</th>
-            
+
             <th class="px-6 py-3 text-right">Action</th>
           </tr>
         </thead>
@@ -52,15 +52,19 @@
             <td class="px-6 py-3.5">{{ app.applicant_data.Loan_Purpose }}</td>
             <td class="px-6 py-3.5">{{ (app.prediction.probability * 100) | round(1) }}%</td>
             <td class="px-6 py-3.5">
-              <span class="px-2.5 py-1 rounded-full text-[11px] font-semibold {% if app.prediction.status == 'Approved' %}bg-emerald-100 text-emerald-800{% else %}bg-rose-100 text-rose-800{% endif %}">
+              <span
+                class="px-2.5 py-1 rounded-full text-[11px] font-semibold {% if app.prediction.status == 'Approved' %}bg-emerald-100 text-emerald-800{% else %}bg-rose-100 text-rose-800{% endif %}">
                 {{ app.prediction.status }}
               </span>
             </td>
-            
+
             <td class="px-6 py-3.5 text-right">
-              <a href="/record/{{ app._id }}" class="text-[#2E5A44] font-bold hover:underline flex items-center justify-end gap-1">
-                View Data & AI 
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+              <a href="/record/{{ app._id }}"
+                class="text-[#2E5A44] font-bold hover:underline flex items-center justify-end gap-1">
+                View Data & AI
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                </svg>
               </a>
             </td>
           </tr>

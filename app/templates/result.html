@@ -6,8 +6,10 @@
 <div class="max-w-3xl mx-auto space-y-6">
 
 
-  <div class="custom-card rounded-2xl p-8 text-center border-t-4 {% if status == 'Approved' %}border-emerald-600{% else %}border-rose-600{% endif %}">
-    <div class="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4 {% if status == 'Approved' %}bg-emerald-50 text-emerald-600{% else %}bg-rose-50 text-rose-600{% endif %}">
+  <div
+    class="custom-card rounded-2xl p-8 text-center border-t-4 {% if status == 'Approved' %}border-emerald-600{% else %}border-rose-600{% endif %}">
+    <div
+      class="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4 {% if status == 'Approved' %}bg-emerald-50 text-emerald-600{% else %}bg-rose-50 text-rose-600{% endif %}">
       {% if status == 'Approved' %}
       <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
@@ -35,30 +37,37 @@
       </div>
       <div class="bg-[#FAFCFA] p-4 rounded-xl border border-[#E2E8E4]">
         <span class="block text-xs font-medium text-[#5C6E64]">Risk Profile</span>
-        <span class="text-2xl font-bold {% if status == 'Approved' %}text-emerald-700{% else %}text-rose-700{% endif %}">
+        <span
+          class="text-2xl font-bold {% if status == 'Approved' %}text-emerald-700{% else %}text-rose-700{% endif %}">
           {% if status == 'Approved' %}Low - Medium{% else %}High Risk{% endif %}
         </span>
       </div>
     </div>
   </div>
 
- 
+
   <div class="flex justify-center space-x-4 pt-2">
     <a href="/" class="btn-sage px-6 py-2.5 rounded-lg text-xs font-semibold">New Application</a>
-    <a href="/dashboard" class="bg-white border border-[#E2E8E4] text-[#1F2E26] hover:bg-[#FAFCFA] px-6 py-2.5 rounded-lg text-xs font-semibold transition">View All Records</a>
+    <a href="/dashboard"
+      class="bg-white border border-[#E2E8E4] text-[#1F2E26] hover:bg-[#FAFCFA] px-6 py-2.5 rounded-lg text-xs font-semibold transition">View
+      All Records</a>
   </div>
 </div>
 
 
 <div id="chatWidget" class="fixed bottom-6 right-6 z-50">
-  <button id="openChatBtn" class="btn-sage w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-white focus:outline-none transition-transform hover:scale-105">
+  <button id="openChatBtn"
+    class="btn-sage w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-white focus:outline-none transition-transform hover:scale-105">
     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"></path>
+      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+        d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
+      </path>
     </svg>
   </button>
 
-  <div id="chatBox" class="hidden custom-card w-80 md:w-96 rounded-2xl shadow-2xl flex flex-col h-[460px] overflow-hidden border border-[#E2E8E4] bg-white">
-    
+  <div id="chatBox"
+    class="hidden custom-card w-80 md:w-96 rounded-2xl shadow-2xl flex flex-col h-[460px] overflow-hidden border border-[#E2E8E4] bg-white">
+
     <div class="bg-[#2E5A44] text-white p-4 flex justify-between items-center shadow-sm">
       <div>
         <h3 class="font-semibold text-sm">CreditPulse Advisor</h3>
@@ -67,16 +76,18 @@
       <button id="closeChatBtn" class="text-white hover:text-gray-200 text-2xl leading-none">&times;</button>
     </div>
 
-    
+
     <div id="chatMessages" class="flex-grow p-4 overflow-y-auto space-y-3 text-xs bg-[#FAFCFA]">
       <div class="bg-white border border-[#E2E8E4] p-3 rounded-lg text-[#1F2E26] shadow-sm">
-        Hello! I can explain why your application resulted in <strong>{{ status }}</strong> and suggest ways to improve your approval chances. What would you like to know?
+        Hello! I can explain why your application resulted in <strong>{{ status }}</strong> and suggest ways to improve
+        your approval chances. What would you like to know?
       </div>
     </div>
 
-  
+
     <form id="chatForm" class="p-3 border-t border-[#E2E8E4] flex gap-2 bg-white">
-      <input type="text" id="chatInput" placeholder="Ask e.g., How can I get approved?" class="input-sage flex-grow px-3 py-2 rounded-lg text-xs" autocomplete="off" required />
+      <input type="text" id="chatInput" placeholder="Ask e.g., How can I get approved?"
+        class="input-sage flex-grow px-3 py-2 rounded-lg text-xs" autocomplete="off" required />
       <button type="submit" class="btn-sage px-3 py-2 rounded-lg text-xs font-semibold">Send</button>
     </form>
   </div>

@@ -1,7 +1,7 @@
 import asyncio
 from datetime import datetime, timezone
 
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request,Cookie
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
@@ -9,7 +9,7 @@ from fastapi.templating import Jinja2Templates
 from bson import ObjectId
 from fastapi import HTTPException
 
-from app.schemas import LoanApplicationInput,ChatRequest,ChatResponse
+from app.schemas import LoanApplicationInput,ChatRequest,ChatResponse,VisitorData
 from app.services import get_loan_prediction,generate_loan_advice
 from app.database import application_collection
 
@@ -130,3 +130,13 @@ async def home(request:Request):
         request=request,
         name="index.html"
     )
+
+@app.post("/api/save-visitor")
+async def vistors(data:VisitorData):
+    record = {
+        "ip_address":data.ip_address,
+        "consent_status":data.consent_status,
+        "visited_at":datetime.now(timezone.utc)
+    }
+    await application_collection.database["visitors"].insert_one(record)
+    return {"status": "success", "message": "IP Saved to Database"}

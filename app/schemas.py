@@ -1,6 +1,7 @@
 from enum import Enum
 from pydantic import BaseModel, Field
 from typing import Dict, Any, Optional  
+from datetime import datetime,timezone
 
 class EmploymentStatus(str, Enum):
     SALARIED = "Salaried"
@@ -13,6 +14,9 @@ class PropertyArea(str, Enum):
     SEMIURBAN = "Semiurban"
     RURAL = "Rural"
 
+class VisitorData(BaseModel):
+    ip_address: str
+    consent_status: str
 
 class LoanApplicationInput(BaseModel):
     Applicant_Income: float = Field(..., ge=0, example=50000.0)

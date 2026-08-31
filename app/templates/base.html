@@ -1,17 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>{% block title %}CreditPulse Loan System{% endblock %}</title>
-  
+
   <script src="https://cdn.tailwindcss.com"></script>
-  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> 
+  <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
   <link rel="stylesheet" href="/static/css/style.css">
-  
+
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
 <body class="min-h-screen flex flex-col">
 
   <nav class="bg-white border-b border-[#E2E8E4] sticky top-0 z-50">
@@ -20,13 +22,15 @@
         <div class="w-9 h-9 rounded-lg bg-[#2E5A44] flex items-center justify-center text-white font-semibold text-lg">
           CP
         </div>
-        
+
       </div>
       <div class="flex space-x-6 text-sm font-medium">
 
         <a href="/" class="text-[#5C6E64] hover:text-[#2E5A44] transition" style="margin-left: 20px;">Home</a>
-        <a href="/application" class="text-[#5C6E64] hover:text-[#2E5A44] transition" style="margin-left: 20px;">Application Form</a>
-        <a href="/dashboard" class="text-[#5C6E64] hover:text-[#2E5A44] transition" style="margin-left: 20px;">Records & Analytics</a>
+        <a href="/application" class="text-[#5C6E64] hover:text-[#2E5A44] transition"
+          style="margin-left: 20px;">Application Form</a>
+        <a href="/dashboard" class="text-[#5C6E64] hover:text-[#2E5A44] transition" style="margin-left: 20px;">Records &
+          Analytics</a>
       </div>
     </div>
   </nav>
@@ -40,6 +44,34 @@
     <p>&copy; 2026 CreditPulse Financial Analytics. All rights reserved.</p>
   </footer>
 
+  <!--Cookie Consent Modal -->
+  <div id="cookiePopup"
+    class="hidden fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4 transition-all duration-300">
+    <div class="bg-white rounded-2xl p-6 md:p-8 max-w-sm w-full shadow-2xl border border-[#E2E8E4] transform scale-100">
+
+      <div class="text-center mb-6">
+        <span class="text-5xl block mb-4">🍪</span>
+        <h3 class="text-xl font-extrabold text-[#1F2E26] mb-2">We value your privacy</h3>
+        <p class="text-sm text-[#5C6E64] leading-relaxed">
+          We use cookies to enhance your browsing experience, serve personalized analytics, and analyze our traffic.
+        </p>
+      </div>
+
+      <div class="flex flex-col gap-3 w-full">
+        <button id="acceptCookies"
+          class="w-full px-5 py-3 text-sm font-bold text-white bg-[#2E5A44] hover:bg-[#244735] rounded-xl transition-colors shadow-md">
+          Accept Cookies
+        </button>
+        <button id="rejectCookies"
+          class="w-full px-5 py-3 text-sm font-bold text-[#5C6E64] bg-[#FAFCFA] border border-[#E2E8E4] hover:bg-gray-100 rounded-xl transition-colors">
+          Reject All
+        </button>
+      </div>
+
+    </div>
+  </div>
   {% block scripts %}{% endblock %}
+
 </body>
+
 </html>
