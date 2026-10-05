@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CreditPulse - Authentication</title>
+    <meta name="description" content="Sign in or create your CreditPulse account for AI-powered loan evaluation.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/static/css/style.css?v=3.0">
+</head>
+<body class="bg-[#F5F5F7] min-h-screen text-[#1D1D1F] antialiased">
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast-container" aria-live="polite"></div>
+
+    <!-- Main Auth Wrapper (Strictly Centered Compact Card Layout) -->
+    <main class="auth-page-body">
+        <div class="auth-card">
+            
+            <!-- Brand Header -->
+            <div class="text-center mb-7">
+                <a href="/" class="inline-block transition-transform hover:scale-105">
+                    <div class="w-11 h-11 rounded-2xl bg-[#2E5A44] flex items-center justify-center text-white font-bold text-lg mx-auto mb-3 shadow-md">CP</div>
+                </a>
+                <h1 class="text-2xl font-bold text-[#1D1D1F] tracking-tight">CreditPulse</h1>
+                <p class="text-xs text-[#86868B] mt-0.5 font-normal">Intelligent Credit & Risk Analytics</p>
+            </div>
+
+            <!-- ================= 1. LOGIN FORM ================= -->
+            <div id="loginForm" class="fade-in auth-view">
+                <h2 class="text-xl font-semibold text-[#1D1D1F] mb-5">Sign In</h2>
+                <form id="formLogin" class="space-y-4" novalidate>
+                    <div>
+                        <label for="loginEmail" class="block text-xs font-semibold text-[#1D1D1F] mb-1.5">Email Address</label>
+                        <input type="email" id="loginEmail" 
+                            class="input-sage w-full px-4 py-2.5" 
+                            placeholder="name@example.com" required autocomplete="email">
+                        <span id="loginEmailError" class="text-xs text-red-500 mt-1 hidden" role="alert"></span>
+                    </div>
+                    <div>
+                        <div class="flex justify-between items-center mb-1.5">
+                            <label for="loginPassword" class="block text-xs font-semibold text-[#1D1D1F]">Password</label>
+                            <button type="button" onclick="switchView('forgotForm')" class="text-xs text-[#86868B] hover:text-[#1D1D1F] transition-colors">Forgot password?</button>
+                        </div>
+                        <div class="password-wrapper">
+                            <input type="password" id="loginPassword" 
+                                class="input-sage w-full px-4 py-2.5 pr-11" 
+                                placeholder="••••••••" required autocomplete="current-password">
+                            <button type="button" class="password-toggle" onclick="togglePassword('loginPassword', this)" aria-label="Show password">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                            </button>
+                        </div>
+                    </div>
+                    <button type="submit" id="btnLogin" class="btn-sage w-full py-3 mt-2 text-xs tracking-wide">
+                        <span>Sign In</span>
+                    </button>
+                </form>
+                <p class="text-center text-xs text-[#86868B] mt-5 font-normal">
+                    Don't have an account? 
+                    <button type="button" onclick="switchView('signupForm')" class="text-[#2E5A44] font-semibold hover:underline">Create account</button>
+                </p>
+            </div>
+
+            <!-- ================= 1b. 2FA LOGIN CHALLENGE ================= -->
+            <div id="login2FaForm" class="hidden fade-in auth-view">
+                <h2 class="text-xl font-semibold text-[#1D1D1F] mb-1">Two-Factor Authentication</h2>
+                <p class="text-xs text-[#86868B] mb-1">Enter the 6-digit code sent to</p>
+                <p id="login2FaEmail" class="text-xs font-semibold text-[#2E5A44] mb-5 truncate"></p>
+                
+                <form id="formLogin2Fa" class="space-y-4">
+                    <div class="otp-container" id="login2FaOtpContainer" role="group" aria-label="2FA verification code">
+                        <input type="text" class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Digit 1" autocomplete="one-time-code">
+                        <input type="text" class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Digit 2">
+                        <input type="text" class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Digit 3">
+                        <input type="text" class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Digit 4">
+                        <input type="text" class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Digit 5">
+                        <input type="text" class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Digit 6">
+                    </div>
+                    <button type="submit" id="btnLogin2FaVerify" class="btn-sage w-full py-3 mt-2 text-xs tracking-wide">
+                        <span>Verify & Sign In</span>
+                    </button>
+                </form>
+                <button type="button" onclick="switchView('loginForm')" class="mt-4 text-xs text-[#86868B] hover:text-[#1D1D1F] w-full text-center block">← Back to Sign In</button>
+            </div>
+
+            <!-- ================= 2. SIGNUP FORM ================= -->
+            <div id="signupForm" class="hidden fade-in auth-view">
+                <h2 class="text-xl font-semibold text-[#1D1D1F] mb-5">Create Account</h2>
+                <form id="formSignup" class="space-y-3.5" novalidate>
+                    <div>
+                        <label for="signupName" class="block text-xs font-semibold text-[#1D1D1F] mb-1.5">Full Name</label>
+                        <input type="text" id="signupName" 
+                            class="input-sage w-full px-4 py-2.5" 
+                            placeholder="John Doe" required autocomplete="name" minlength="2">
+                    </div>
+                    <div>
+                        <label for="signupEmail" class="block text-xs font-semibold text-[#1D1D1F] mb-1.5">Email Address</label>
+                        <input type="email" id="signupEmail" 
+                            class="input-sage w-full px-4 py-2.5" 
+                            placeholder="name@example.com" required autocomplete="email">
+                    </div>
+                    <div>
+                        <label for="signupPhone" class="block text-xs font-semibold text-[#1D1D1F] mb-1.5">Phone <span class="text-[#86868B] font-normal">(optional)</span></label>
+                        <input type="tel" id="signupPhone" 
+                            class="input-sage w-full px-4 py-2.5" 
+                            placeholder="+91 98765 43210" autocomplete="tel">
+                    </div>
+                    <div>
+                        <label for="signupPassword" class="block text-xs font-semibold text-[#1D1D1F] mb-1.5">Password</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="signupPassword" 
+                                class="input-sage w-full px-4 py-2.5 pr-11" 
+                                placeholder="Min. 8 characters" required autocomplete="new-password" minlength="8">
+                            <button type="button" class="password-toggle" onclick="togglePassword('signupPassword', this)" aria-label="Show password">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                            </button>
+                        </div>
+                        <div id="signupStrength" class="password-strength hidden">
+                            <div class="strength-bar-track"><div class="strength-bar-fill"></div></div>
+                            <span class="strength-label"></span>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="signupConfirmPassword" class="block text-xs font-semibold text-[#1D1D1F] mb-1.5">Confirm Password</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="signupConfirmPassword" 
+                                class="input-sage w-full px-4 py-2.5 pr-11" 
+                                placeholder="Re-enter password" required autocomplete="new-password">
+                            <button type="button" class="password-toggle" onclick="togglePassword('signupConfirmPassword', this)" aria-label="Show password">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                            </button>
+                        </div>
+                        <span id="confirmPwdError" class="text-xs text-red-500 mt-1 hidden" role="alert">Passwords do not match</span>
+                    </div>
+                    <button type="submit" id="btnSendSignupOtp" class="btn-sage w-full py-3 mt-2 text-xs tracking-wide">
+                        <span>Send Verification OTP</span>
+                    </button>
+                </form>
+                <p class="text-center text-xs text-[#86868B] mt-5 font-normal">
+                    Already have an account? 
+                    <button type="button" onclick="switchView('loginForm')" class="text-[#2E5A44] font-semibold hover:underline">Sign in</button>
+                </p>
+            </div>
+
+            <!-- ================= 3. SIGNUP OTP VERIFY ================= -->
+            <div id="signupOtpForm" class="hidden fade-in auth-view">
+                <h2 class="text-xl font-semibold text-[#1D1D1F] mb-1">Enter Code</h2>
+                <p class="text-xs text-[#86868B] mb-1">We sent a 6-digit verification code to</p>
+                <p id="signupOtpEmail" class="text-xs font-semibold text-[#2E5A44] mb-5 truncate"></p>
+                
+                <form id="formSignupVerify" class="space-y-4">
+                    <div class="otp-container" id="signupOtpContainer" role="group" aria-label="OTP verification code">
+                        <input type="text" class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Digit 1" autocomplete="one-time-code">
+                        <input type="text" class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Digit 2">
+                        <input type="text" class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Digit 3">
+                        <input type="text" class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Digit 4">
+                        <input type="text" class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Digit 5">
+                        <input type="text" class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Digit 6">
+                    </div>
+                    <div class="flex items-center justify-between text-xs pt-1">
+                        <p class="text-red-500 font-medium">
+                            Expires: <span id="signupTimerDisplay">05:00</span>
+                        </p>
+                        <button type="button" id="resendSignupOtp" class="resend-link" disabled>Resend OTP (<span id="resendSignupCooldown">60</span>s)</button>
+                    </div>
+                    <button type="submit" id="btnVerifySignup" class="btn-sage w-full py-3 mt-2 text-xs tracking-wide">
+                        <span>Verify & Create Account</span>
+                    </button>
+                </form>
+                <button type="button" onclick="switchView('signupForm')" class="mt-4 text-xs text-[#86868B] hover:text-[#1D1D1F] w-full text-center block">← Back to Edit Details</button>
+            </div>
+
+            <!-- ================= 4. FORGOT PASSWORD ================= -->
+            <div id="forgotForm" class="hidden fade-in auth-view">
+                <h2 class="text-xl font-semibold text-[#1D1D1F] mb-1">Reset Password</h2>
+                <p class="text-xs text-[#86868B] mb-5">Enter your registered email to receive an OTP.</p>
+                <form id="formForgot" class="space-y-4" novalidate>
+                    <div>
+                        <label for="forgotEmail" class="block text-xs font-semibold text-[#1D1D1F] mb-1.5">Email Address</label>
+                        <input type="email" id="forgotEmail" 
+                            class="input-sage w-full px-4 py-2.5" 
+                            placeholder="name@example.com" required autocomplete="email">
+                    </div>
+                    <button type="submit" id="btnSendResetOtp" class="btn-sage w-full py-3 mt-2 text-xs tracking-wide">
+                        <span>Send Reset OTP</span>
+                    </button>
+                </form>
+                <button type="button" onclick="switchView('loginForm')" class="mt-4 text-xs text-[#86868B] hover:text-[#1D1D1F] w-full text-center block">← Back to Sign In</button>
+            </div>
+
+            <!-- ================= 5. RESET PASSWORD OTP + NEW PASSWORD ================= -->
+            <div id="resetForm" class="hidden fade-in auth-view">
+                <h2 class="text-xl font-semibold text-[#1D1D1F] mb-1">New Password</h2>
+                <p class="text-xs text-[#86868B] mb-1">Enter the 6-digit code sent to</p>
+                <p id="resetOtpEmail" class="text-xs font-semibold text-[#2E5A44] mb-4 truncate"></p>
+                
+                <form id="formReset" class="space-y-3.5" novalidate>
+                    <div>
+                        <label class="block text-xs font-semibold text-[#1D1D1F] mb-1.5">Verification Code</label>
+                        <div class="otp-container" id="resetOtpContainer" role="group" aria-label="Reset verification code">
+                            <input type="text" class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Digit 1">
+                            <input type="text" class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Digit 2">
+                            <input type="text" class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Digit 3">
+                            <input type="text" class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Digit 4">
+                            <input type="text" class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Digit 5">
+                            <input type="text" class="otp-box" maxlength="1" inputmode="numeric" pattern="[0-9]" aria-label="Digit 6">
+                        </div>
+                    </div>
+                    <div>
+                        <label for="newPassword" class="block text-xs font-semibold text-[#1D1D1F] mb-1.5">New Password</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="newPassword" 
+                                class="input-sage w-full px-4 py-2.5 pr-11" 
+                                placeholder="Min. 8 characters" required minlength="8" autocomplete="new-password">
+                            <button type="button" class="password-toggle" onclick="togglePassword('newPassword', this)" aria-label="Show password">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                            </button>
+                        </div>
+                        <div id="resetStrength" class="password-strength hidden">
+                            <div class="strength-bar-track"><div class="strength-bar-fill"></div></div>
+                            <span class="strength-label"></span>
+                        </div>
+                    </div>
+                    <div>
+                        <label for="confirmNewPassword" class="block text-xs font-semibold text-[#1D1D1F] mb-1.5">Confirm New Password</label>
+                        <div class="password-wrapper">
+                            <input type="password" id="confirmNewPassword" 
+                                class="input-sage w-full px-4 py-2.5 pr-11" 
+                                placeholder="Re-enter new password" required autocomplete="new-password">
+                            <button type="button" class="password-toggle" onclick="togglePassword('confirmNewPassword', this)" aria-label="Show password">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                            </button>
+                        </div>
+                        <span id="confirmResetPwdError" class="text-xs text-red-500 mt-1 hidden" role="alert">Passwords do not match</span>
+                    </div>
+                    <div class="flex items-center justify-between text-xs pt-1">
+                        <p class="text-red-500 font-medium">
+                            Expires: <span id="resetTimerDisplay">05:00</span>
+                        </p>
+                        <button type="button" id="resendResetOtp" class="resend-link" disabled>Resend OTP (<span id="resendResetCooldown">60</span>s)</button>
+                    </div>
+                    <button type="submit" id="btnVerifyReset" class="btn-sage w-full py-3 mt-2 text-xs tracking-wide">
+                        <span>Update Password</span>
+                    </button>
+                </form>
+                <button type="button" onclick="switchView('forgotForm')" class="mt-4 text-xs text-[#86868B] hover:text-[#1D1D1F] w-full text-center block">← Back</button>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

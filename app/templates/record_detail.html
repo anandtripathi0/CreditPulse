@@ -1,64 +1,161 @@
 {% extends "base.html" %}
-{% block title %}Record Analytics - CreditPulse{% endblock %}
+
+{% block title %}Evaluation Details - CreditPulse{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto space-y-6">
-  <div class="flex justify-between items-center mb-6">
-    <h1 class="text-2xl font-bold text-[#1F2E26]">Application Analytics</h1>
-    <a href="/dashboard" class="btn-sage px-4 py-2 rounded-lg text-xs">Back to Dashboard</a>
+<div class="max-w-4xl mx-auto space-y-6 py-4">
+
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div>
+      <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#2E5A44]/10 text-[#2E5A44] text-xs font-semibold mb-2">
+        <span class="w-1.5 h-1.5 rounded-full bg-[#2E5A44]"></span>
+        Verified Evaluation Record
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-[#1D1D1F]">Application Assessment</h1>
+      <p class="text-xs text-[#86868B] mt-0.5">Recorded on {{ record.formatted_date or 'N/A' }}</p>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <a href="/history" class="px-4 py-2 text-xs font-semibold rounded-full border border-black/[0.08] hover:bg-black/[0.02] text-[#1D1D1F] transition">
+        &larr; Back to History
+      </a>
+      <button type="button" onclick='rerunEvaluation({{ record.applicant_data | tojson | safe }})' class="btn-sage px-4 py-2 text-xs font-semibold tracking-wide">
+        Re-run Evaluation
+      </button>
+    </div>
   </div>
 
-  <div class="custom-card p-6 rounded-2xl grid grid-cols-2 gap-4">
-    <div>
-      <p class="text-sm text-gray-500">Status</p>
-      <p
-        class="text-xl font-bold {% if record.prediction.status == 'Approved' %}text-emerald-600{% else %}text-rose-600{% endif %}">
-        {{ record.prediction.status }}
+
+  <div class="card-premium p-6 sm:p-8 flex flex-col sm:flex-row sm:items-center justify-between gap-6 border-l-4 {% if record.prediction.status == 'Approved' %}border-l-emerald-600{% else %}border-l-rose-600{% endif %}">
+    <div class="space-y-1">
+      <span class="text-xs font-semibold uppercase tracking-wider text-[#86868B]">Algorithmic Outcome</span>
+      <div class="flex items-center gap-3">
+        <span class="text-3xl font-extrabold tracking-tight {% if record.prediction.status == 'Approved' %}text-emerald-700{% else %}text-rose-700{% endif %}">
+          {{ record.prediction.status }}
+        </span>
+        <span class="px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider {% if record.prediction.status == 'Approved' %}bg-emerald-100 text-emerald-800{% else %}bg-rose-100 text-rose-800{% endif %}">
+          {{ (record.prediction.probability * 100) | round(1) }}% Confidence
+        </span>
+      </div>
+      <p class="text-xs text-[#86868B] pt-1">
+        Probability of favorable repayment based on trained machine-learning model features.
       </p>
     </div>
-    <div>
-      <p class="text-sm text-gray-500">AI Confidence</p>
-      <p class="text-xl font-bold text-[#2E5A44]">{{ (record.prediction.probability * 100) | round(2) }}%</p>
+
+    <div class="text-left sm:text-right space-y-0.5">
+      <div class="text-xs text-[#86868B]">Requested Capital</div>
+      <div class="text-2xl font-bold tracking-tight text-[#1D1D1F]">₹{{ record.applicant_data.Loan_Amount }}</div>
+      <div class="text-[11px] text-[#86868B]">{{ record.applicant_data.Loan_Amount_Term or 360 }} Months Term</div>
     </div>
-    <div>
-      <p class="text-sm text-gray-500">Applicant Income</p>
-      <p class="font-semibold">₹{{ record.applicant_data.Applicant_Income }}</p>
-    </div>
-    <div>
-      <p class="text-sm text-gray-500">Credit Score</p>
-      <p class="font-semibold">{{ record.applicant_data.Credit_Score }}</p>
+  </div>
+
+
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+    <div class="card-premium p-6 space-y-4">
+      <h2 class="text-sm font-semibold text-[#1D1D1F] border-b border-black/[0.06] pb-2">Financial Credentials</h2>
+      
+      <div class="grid grid-cols-2 gap-4 text-xs">
+        <div>
+          <span class="text-[#86868B] block">Applicant Income</span>
+          <span class="font-semibold text-[#1D1D1F] text-sm">₹{{ record.applicant_data.Applicant_Income }}</span>
+        </div>
+        <div>
+          <span class="text-[#86868B] block">Co-applicant Income</span>
+          <span class="font-semibold text-[#1D1D1F] text-sm">₹{{ record.applicant_data.Coapplicant_Income or 0 }}</span>
+        </div>
+        <div>
+          <span class="text-[#86868B] block">Credit Score Input</span>
+          <span class="font-semibold text-[#1D1D1F] text-sm">{{ record.applicant_data.Credit_Score }}</span>
+        </div>
+        <div>
+          <span class="text-[#86868B] block">Credit History Flag</span>
+          <span class="font-semibold text-[#1D1D1F] text-sm">{{ 'Good (1.0)' if record.applicant_data.Credit_History == 1 else 'Poor (0.0)' }}</span>
+        </div>
+      </div>
     </div>
 
+
+    <div class="card-premium p-6 space-y-4">
+      <h2 class="text-sm font-semibold text-[#1D1D1F] border-b border-black/[0.06] pb-2">Demographic Profile</h2>
+
+      <div class="grid grid-cols-2 gap-4 text-xs">
+        <div>
+          <span class="text-[#86868B] block">Loan Purpose</span>
+          <span class="font-semibold text-[#1D1D1F] text-sm">{{ record.applicant_data.Loan_Purpose or 'Personal' }}</span>
+        </div>
+        <div>
+          <span class="text-[#86868B] block">Employment</span>
+          <span class="font-semibold text-[#1D1D1F] text-sm">{{ record.applicant_data.Self_Employed or record.applicant_data.Employment_Type or 'Salaried' }}</span>
+        </div>
+        <div>
+          <span class="text-[#86868B] block">Education Level</span>
+          <span class="font-semibold text-[#1D1D1F] text-sm">{{ record.applicant_data.Education or 'Graduate' }}</span>
+        </div>
+        <div>
+          <span class="text-[#86868B] block">Property Area</span>
+          <span class="font-semibold text-[#1D1D1F] text-sm">{{ record.applicant_data.Property_Area or 'Urban' }}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="card-premium p-6 sm:p-8 space-y-4">
+    <div class="flex items-center justify-between">
+      <div>
+        <h2 class="text-sm font-semibold text-[#1D1D1F]">AI Loan Advisor Analysis</h2>
+        <p class="text-xs text-[#86868B]">In-depth context explaining this decision</p>
+      </div>
+      <div class="w-8 h-8 rounded-full bg-[#2E5A44]/10 text-[#2E5A44] flex items-center justify-center font-bold text-xs">
+        AI
+      </div>
+    </div>
+
+    <div class="p-4 rounded-2xl bg-[#F5F5F7] text-xs text-[#1D1D1F] leading-relaxed space-y-2">
+      {% if record.prediction.status == 'Approved' %}
+      <p>
+        <strong>Approval Rationale:</strong> The model identified a solid debt-to-income profile with sufficient applicant earnings relative to requested principal (₹{{ record.applicant_data.Loan_Amount }}). Credit score and historical indicators satisfied baseline underwriting risk thresholds.
+      </p>
+      <p class="text-[#86868B]">
+        Recommendation: To maintain favorable interest rates, ensure timely EMI amortization and maintain credit utilization below 30%.
+      </p>
+      {% else %}
+      <p>
+        <strong>Rejection Rationale:</strong> The requested loan quantum (₹{{ record.applicant_data.Loan_Amount }}) exceeded the sustainable repayment threshold given an income of ₹{{ record.applicant_data.Applicant_Income }} and an input credit score of {{ record.applicant_data.Credit_Score }}.
+      </p>
+      <p class="text-[#86868B]">
+        Corrective Steps: Adding a creditworthy co-applicant, reducing the requested loan amount, or improving the credit score will substantially increase the likelihood of approval.
+      </p>
+      {% endif %}
+    </div>
   </div>
 </div>
 
 
 <div id="chatWidget" class="fixed bottom-6 right-6 z-50">
-  <button id="openChatBtn"
-    class="btn-sage w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-white focus:outline-none transition-transform hover:scale-105">
-    🤖
+  <button id="openChatBtn" class="btn-sage w-12 h-12 rounded-full shadow-lg flex items-center justify-center text-white focus:outline-none transition-transform hover:scale-105" aria-label="Open AI Advisor Chat">
+    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-5l-5 5v-5z"></path></svg>
   </button>
 
-  <div id="chatBox"
-    class="hidden custom-card w-80 md:w-96 rounded-2xl shadow-2xl flex flex-col h-[460px] bg-white border border-[#E2E8E4]">
-    <div class="bg-[#2E5A44] text-white p-4 flex justify-between items-center">
-      <div>
-        <h3 class="font-semibold text-sm">Record specific AI Help</h3>
+  <div id="chatBox" class="hidden card-premium w-[calc(100vw-32px)] sm:w-96 shadow-2xl flex flex-col h-[460px] overflow-hidden fixed bottom-20 right-4 sm:right-6 border border-black/[0.08]">
+    <div class="bg-[#1D1D1F] text-white p-4 flex justify-between items-center">
+      <div class="flex items-center gap-2">
+        <div class="w-2 h-2 rounded-full bg-emerald-400"></div>
+        <span class="font-semibold text-xs tracking-tight">CreditPulse Record Advisor</span>
       </div>
-      <button id="closeChatBtn" class="text-white hover:text-gray-200 text-2xl leading-none">&times;</button>
+      <button id="closeChatBtn" class="text-[#86868B] hover:text-white text-xl leading-none">&times;</button>
     </div>
 
-    <div id="chatMessages" class="flex-grow p-4 overflow-y-auto space-y-3 text-xs bg-[#FAFCFA]">
-      <div class="bg-white border border-[#E2E8E4] p-3 rounded-lg text-[#1F2E26] shadow-sm">
-        Hi! I have the data for this specific application open. <strong>Is record se related aapko kya janna
-          hai?</strong> (Why it was rejected, how to improve, etc.)
+    <div id="chatMessages" class="flex-grow p-4 overflow-y-auto space-y-3 text-xs bg-[#FAFAFA]">
+      <div class="bg-white border border-black/[0.06] p-3 rounded-2xl text-[#1D1D1F] shadow-sm max-w-[85%]">
+        Hello! I have loaded this specific application (Status: <strong>{{ record.prediction.status }}</strong>, Amount: ₹{{ record.applicant_data.Loan_Amount }}). How can I help you analyze it?
       </div>
     </div>
 
-    <form id="chatForm" action="#" onsubmit="return false;" class="p-3 border-t border-[#E2E8E4] flex gap-2 bg-white">
-      <input type="text" id="chatInput" placeholder="Ask about this record..."
-        class="input-sage flex-grow px-3 py-2 rounded-lg text-xs" autocomplete="off" required />
-      <button type="button" id="sendBtn" class="btn-sage px-3 py-2 rounded-lg text-xs font-semibold">Send</button>
+    <form id="chatForm" action="#" onsubmit="return false;" class="p-3 border-t border-black/[0.06] flex gap-2 bg-white">
+      <input type="text" id="chatInput" placeholder="Ask about this loan decision..." class="input-premium flex-grow text-xs py-2 px-3" autocomplete="off" required />
+      <button type="button" id="sendBtn" class="btn-sage px-3.5 py-2 text-xs font-semibold">Send</button>
     </form>
   </div>
 </div>
@@ -70,9 +167,18 @@
 <script>
   const rawData = document.getElementById('recordData').textContent;
   sessionStorage.setItem('last_application', rawData);
-
   sessionStorage.setItem('app_status', '{{ record.prediction.status }}');
   sessionStorage.setItem('app_prob', '{{ record.prediction.probability }}');
+
+  function rerunEvaluation(data) {
+    if (!data) return;
+    try {
+      localStorage.setItem("pending_evaluation_data", JSON.stringify(data));
+      window.location.href = "/application";
+    } catch (e) {
+      window.location.href = "/application";
+    }
+  }
 </script>
 {% endblock %}
 

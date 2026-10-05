@@ -1,0 +1,443 @@
+{% extends "base.html" %}
+
+{% block title %}Credit Score Predictor - CreditPulse{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto space-y-8 py-4">
+
+  <div class="text-center space-y-2">
+    <div class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#2E5A44]/10 text-[#2E5A44] text-xs font-semibold">
+      <span class="w-1.5 h-1.5 rounded-full bg-[#2E5A44]"></span>
+      CreditPulse Intelligence Tool
+    </div>
+    <h1 class="text-3xl font-bold tracking-tight text-[#1D1D1F]">Estimated Credit Score Predictor</h1>
+    <p class="text-sm text-[#86868B] max-w-xl mx-auto">
+      Simulate and estimate your credit profile on a standard 300–900 scale based on verified EMI discipline, debt burden, and credit utilization.
+    </p>
+  </div>
+
+ 
+  <div class="bg-[#F5F5F7] border border-black/[0.06] rounded-2xl p-4 flex items-start gap-3">
+    <div class="w-5 h-5 rounded-full bg-[#86868B]/20 text-[#86868B] flex items-center justify-center flex-shrink-0 mt-0.5">
+      <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+    </div>
+    <div class="text-xs text-[#6E6E73] leading-relaxed">
+      <strong class="text-[#1D1D1F]">Educational Purpose Notice:</strong> This is a proprietary educational credit estimation tool designed to model financial health. It is <strong class="text-[#1D1D1F]">not an official credit bureau score</strong> (such as CIBIL, Experian, Equifax, or CRIF). Use these insights to understand the impact of repayment habits on your overall creditworthiness.
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+    <div class="lg:col-span-7">
+      <form id="creditScoreForm" class="card-premium p-6 sm:p-8 space-y-6 shadow-sm">
+        <div class="flex items-center justify-between border-b border-black/[0.06] pb-4">
+          <div>
+            <h2 class="text-base font-bold text-[#1D1D1F]">Your Financial & Credit Profile</h2>
+            <p class="text-xs text-[#86868B] mt-0.5">Provide accurate repayment and borrowing figures for realistic modeling.</p>
+          </div>
+          <span class="hidden sm:inline-flex px-2.5 py-1 rounded-full bg-[#2E5A44]/10 text-[#2E5A44] text-[11px] font-semibold">
+            300–900 Scale
+          </span>
+        </div>
+
+
+        <div class="space-y-4 pt-1">
+          <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#2E5A44]">
+            <span class="w-5 h-5 rounded-full bg-[#2E5A44] text-white flex items-center justify-center text-[10px] font-bold">1</span>
+            <span>Loan Profile & Borrowing History</span>
+          </div>
+          
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="form-label" for="active_loans">Active Loans Count</label>
+              <input type="number" id="active_loans" name="active_loans" class="input-premium" min="0" max="30" value="2" required>
+            </div>
+            <div>
+              <label class="form-label" for="credit_age_years">Oldest Credit / Loan Age (Years)</label>
+              <input type="number" step="0.5" id="credit_age_years" name="credit_age_years" class="input-premium" min="0" max="40" value="4.5" required>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="form-label" for="total_loan_amount">Total Loan Amount</label>
+              <div class="relative">
+                <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-semibold text-[#86868B]">₹</span>
+                <input type="number" id="total_loan_amount" name="total_loan_amount" class="input-premium pl-8" min="0" step="5000" value="450000" required>
+              </div>
+            </div>
+            <div>
+              <label class="form-label" for="outstanding_balance">Current Outstanding Balance</label>
+              <div class="relative">
+                <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-semibold text-[#86868B]">₹</span>
+                <input type="number" id="outstanding_balance" name="outstanding_balance" class="input-premium pl-8" min="0" step="5000" value="220000" required>
+              </div>
+            </div>
+          </div>
+
+          <div>
+            <label class="form-label" for="loan_types">Active Loan Types</label>
+            <input type="text" id="loan_types" name="loan_types" class="input-premium" placeholder="e.g. Personal, Auto, Credit Card" value="Personal, Credit Card">
+            <span class="text-[11px] text-[#86868B] block mt-1">A healthy mix of secured and unsecured credit boosts your overall rating.</span>
+          </div>
+        </div>
+
+        <div class="space-y-4 pt-3 border-t border-black/[0.06]">
+          <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#2E5A44]">
+            <span class="w-5 h-5 rounded-full bg-[#2E5A44] text-white flex items-center justify-center text-[10px] font-bold">2</span>
+            <span>EMI Repayment Discipline (Last 24–36 Months)</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="form-label" for="total_emis_due">Total EMIs Due</label>
+              <input type="number" id="total_emis_due" name="total_emis_due" class="input-premium" min="0" value="36" required>
+            </div>
+            <div>
+              <label class="form-label" for="emis_paid_on_time">EMIs Paid On Time</label>
+              <input type="number" id="emis_paid_on_time" name="emis_paid_on_time" class="input-premium" min="0" value="34" required>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div>
+              <label class="form-label" for="emis_paid_late">Late EMIs</label>
+              <input type="number" id="emis_paid_late" name="emis_paid_late" class="input-premium" min="0" value="2" required>
+            </div>
+            <div>
+              <label class="form-label" for="missed_emis">Missed / Defaults</label>
+              <input type="number" id="missed_emis" name="missed_emis" class="input-premium" min="0" value="0" required>
+            </div>
+            <div>
+              <label class="form-label" for="average_delay_days">Avg Delay (Days)</label>
+              <input type="number" id="average_delay_days" name="average_delay_days" class="input-premium" min="0" value="4" required>
+            </div>
+          </div>
+        </div>
+
+        <div class="space-y-4 pt-3 border-t border-black/[0.06]">
+          <div class="flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-[#2E5A44]">
+            <span class="w-5 h-5 rounded-full bg-[#2E5A44] text-white flex items-center justify-center text-[10px] font-bold">3</span>
+            <span>Card Limits & Monthly Earnings</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="form-label" for="credit_limit">Total Credit Card Limit</label>
+              <div class="relative">
+                <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-semibold text-[#86868B]">₹</span>
+                <input type="number" id="credit_limit" name="credit_limit" class="input-premium pl-8" min="0" step="5000" value="150000" required>
+              </div>
+            </div>
+            <div>
+              <label class="form-label" for="credit_utilized">Current Utilized Balance</label>
+              <div class="relative">
+                <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-semibold text-[#86868B]">₹</span>
+                <input type="number" id="credit_utilized" name="credit_utilized" class="input-premium pl-8" min="0" step="1000" value="42000" required>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div>
+              <label class="form-label" for="monthly_income">Monthly Net Income</label>
+              <div class="relative">
+                <span class="absolute left-3.5 top-1/2 -translate-y-1/2 text-xs font-semibold text-[#86868B]">₹</span>
+                <input type="number" id="monthly_income" name="monthly_income" class="input-premium pl-8" min="1000" step="2000" value="85000" required>
+              </div>
+            </div>
+            <div>
+              <label class="form-label" for="employment_type">Employment Classification</label>
+              <select id="employment_type" name="employment_type" class="input-premium">
+                <option value="Salaried" selected>Salaried Professional</option>
+                <option value="Self-Employed">Self-Employed / Business</option>
+                <option value="Professional">Doctor / CA / Lawyer</option>
+                <option value="Other">Other / Consultant</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div id="scoreError" class="hidden p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-medium"></div>
+
+        <button type="submit" id="btnCalculateScore" class="btn-sage w-full py-3.5 text-sm font-semibold tracking-wide flex items-center justify-center gap-2 cursor-pointer shadow-md">
+          <span>Calculate Estimated Score</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+        </button>
+      </form>
+    </div>
+
+  
+    <div class="lg:col-span-5 space-y-6">
+      <div id="resultPlaceholder" class="card-premium p-8 text-center space-y-4">
+        <div class="w-16 h-16 rounded-full bg-[#F5F5F7] border border-black/[0.06] flex items-center justify-center mx-auto text-[#2E5A44]">
+          <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+        </div>
+        <h3 class="text-base font-bold text-[#1D1D1F]">Ready to Estimate</h3>
+        <p class="text-xs text-[#86868B] leading-relaxed">
+          Review your borrowing and EMI history on the left and click Calculate. Your instant score gauge and factor breakdown will appear here.
+        </p>
+      </div>
+
+
+      <div id="scoreResultCard" class="hidden card-premium p-6 sm:p-8 space-y-6 border-[#2E5A44]/20 shadow-lg bg-white">
+        <div class="text-center space-y-4 border-b border-black/[0.06] pb-6">
+          <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-black/[0.04] text-[10.5px] font-bold uppercase tracking-wider text-[#86868B]">
+            Estimated Credit Score
+          </span>
+
+
+          <div class="relative w-40 h-40 mx-auto flex items-center justify-center">
+            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 120 120">
+              <circle cx="60" cy="60" r="50" stroke="#F0F0F2" stroke-width="8" fill="none"></circle>
+              <circle id="scoreGaugeCircle" cx="60" cy="60" r="50" stroke="#2E5A44" stroke-width="8" stroke-linecap="round" fill="none" stroke-dasharray="314" stroke-dashoffset="314" class="transition-all duration-1000 ease-out"></circle>
+            </svg>
+            <div class="absolute inset-0 flex flex-col items-center justify-center">
+              <span id="scoreValue" class="text-4xl font-extrabold tracking-tight text-[#1D1D1F]">--</span>
+              <span class="text-[10px] uppercase font-bold text-[#86868B]">/ 900</span>
+            </div>
+          </div>
+
+          <div>
+            <span id="scoreBandBadge" class="inline-block px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider shadow-xs">
+              --
+            </span>
+          </div>
+          <p class="text-[11px] text-[#86868B]">
+            Calculated via CreditPulse Multi-Pillar Scoring Model & saved to your account.
+          </p>
+        </div>
+
+
+        <div class="space-y-3">
+          <div class="text-xs font-bold uppercase tracking-wider text-[#1D1D1F]">Factor Breakdown</div>
+          <div id="factorList" class="space-y-2 text-xs">
+
+          </div>
+        </div>
+
+
+        <div class="space-y-4 pt-2 border-t border-black/[0.06]">
+          <div id="whatHelpedSection" class="space-y-1.5">
+            <div class="text-xs font-bold text-emerald-800 flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
+              What Helped Your Score
+            </div>
+            <ul id="whatHelpedList" class="text-xs text-[#6E6E73] list-disc list-inside space-y-1"></ul>
+          </div>
+
+          <div id="whatReducedSection" class="space-y-1.5">
+            <div class="text-xs font-bold text-amber-800 flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-amber-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+              What May Reduce Your Score
+            </div>
+            <ul id="whatReducedList" class="text-xs text-[#6E6E73] list-disc list-inside space-y-1"></ul>
+          </div>
+
+          <div id="howToImproveSection" class="space-y-1.5">
+            <div class="text-xs font-bold text-[#2E5A44] flex items-center gap-1.5">
+              <svg class="w-3.5 h-3.5 text-[#2E5A44]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+              How You Can Improve
+            </div>
+            <ul id="howToImproveList" class="text-xs text-[#6E6E73] list-disc list-inside space-y-1"></ul>
+          </div>
+        </div>
+
+        <div class="pt-4 border-t border-black/[0.06] flex items-center justify-between">
+          <a href="/dashboard" class="text-xs font-semibold text-[#2E5A44] hover:underline inline-flex items-center gap-1">
+            <span>View in Dashboard</span>
+            <span aria-hidden="true">&rarr;</span>
+          </a>
+          <a href="/analytics" class="text-xs font-semibold text-[#86868B] hover:text-[#1D1D1F]">See Analytics Trend &rarr;</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const form = document.getElementById("creditScoreForm");
+  const btn = document.getElementById("btnCalculateScore");
+  const errBox = document.getElementById("scoreError");
+  const resultCard = document.getElementById("scoreResultCard");
+  const placeholder = document.getElementById("resultPlaceholder");
+
+  const pendingScore = localStorage.getItem("pending_score_input");
+  if (pendingScore) {
+    try {
+      const data = JSON.parse(pendingScore);
+      for (const [key, val] of Object.entries(data)) {
+        const input = document.getElementById(key);
+        if (input) input.value = val;
+      }
+      localStorage.removeItem("pending_score_input");
+     
+      {% if user %}
+      setTimeout(() => form.dispatchEvent(new Event("submit")), 200);
+      {% endif %}
+    } catch (e) {
+      console.warn("Could not restore score input:", e);
+    }
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    errBox.classList.add("hidden");
+    errBox.textContent = "";
+
+    const formData = new FormData(form);
+    const payload = {
+      active_loans: parseInt(formData.get("active_loans") || 0),
+      total_loan_amount: parseFloat(formData.get("total_loan_amount") || 0),
+      outstanding_balance: parseFloat(formData.get("outstanding_balance") || 0),
+      loan_types: formData.get("loan_types") || "",
+      credit_age_years: parseFloat(formData.get("credit_age_years") || 0),
+      total_emis_due: parseInt(formData.get("total_emis_due") || 0),
+      emis_paid_on_time: parseInt(formData.get("emis_paid_on_time") || 0),
+      emis_paid_late: parseInt(formData.get("emis_paid_late") || 0),
+      missed_emis: parseInt(formData.get("missed_emis") || 0),
+      average_delay_days: parseFloat(formData.get("average_delay_days") || 0),
+      credit_limit: parseFloat(formData.get("credit_limit") || 0),
+      credit_utilized: parseFloat(formData.get("credit_utilized") || 0),
+      monthly_income: parseFloat(formData.get("monthly_income") || 0),
+      employment_type: formData.get("employment_type") || "Salaried"
+    };
+
+  
+    {% if not user %}
+  
+      localStorage.setItem("pending_score_input", JSON.stringify(payload));
+      window.location.href = "/authenticate?intent=credit-score";
+      return;
+    {% endif %}
+
+    btn.disabled = true;
+    btn.innerHTML = `
+      <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+      </svg>
+      <span>Calculating Score...</span>
+    `;
+
+    try {
+      const res = await fetch("/api/credit-score", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+
+      if (res.status === 401) {
+        localStorage.setItem("pending_score_input", JSON.stringify(payload));
+        window.location.href = "/authenticate?intent=credit-score";
+        return;
+      }
+
+      if (!res.ok) {
+        const errData = await res.json().catch(() => ({}));
+        throw new Error(errData.detail || "Unable to calculate credit score");
+      }
+
+      const result = await res.json();
+
+      document.getElementById("scoreValue").textContent = result.estimated_score;
+      const bandBadge = document.getElementById("scoreBandBadge");
+      bandBadge.textContent = result.risk_band;
+
+
+      const gaugeCircle = document.getElementById("scoreGaugeCircle");
+      if (gaugeCircle) {
+        const score = result.estimated_score || 300;
+        const fraction = Math.max(0, Math.min(1, (score - 300) / 600));
+        const circumference = 314;
+        const offset = circumference - (fraction * circumference);
+        gaugeCircle.style.strokeDashoffset = offset;
+        if (result.rating_color === "emerald") {
+          gaugeCircle.setAttribute("stroke", "#10B981");
+        } else if (result.rating_color === "teal") {
+          gaugeCircle.setAttribute("stroke", "#2E5A44");
+        } else if (result.rating_color === "amber") {
+          gaugeCircle.setAttribute("stroke", "#F59E0B");
+        } else {
+          gaugeCircle.setAttribute("stroke", "#EF4444");
+        }
+      }
+      
+
+      if (result.rating_color === "emerald") {
+        bandBadge.className = "inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-emerald-100 text-emerald-800";
+      } else if (result.rating_color === "teal") {
+        bandBadge.className = "inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-teal-100 text-teal-800";
+      } else if (result.rating_color === "amber") {
+        bandBadge.className = "inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-amber-100 text-amber-800";
+      } else {
+        bandBadge.className = "inline-block px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider bg-rose-100 text-rose-800";
+      }
+
+      showToast("success", "Score Calculated", `Estimated Score: ${result.estimated_score} (${result.risk_band}). Saved to your account.`);
+
+    
+      const factorList = document.getElementById("factorList");
+      factorList.innerHTML = "";
+      if (result.factors) {
+        for (const [factorName, factorData] of Object.entries(result.factors)) {
+          const row = document.createElement("div");
+          row.className = "flex items-center justify-between p-2 rounded-lg bg-[#F5F5F7]";
+          row.innerHTML = `
+            <span class="font-medium text-[#1D1D1F]">${factorName}</span>
+            <div class="flex items-center gap-2">
+              <span class="text-[#86868B] text-[11px]">${factorData.score_points}/${factorData.max_points} pts</span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-semibold ${
+                factorData.status === 'Strong' ? 'bg-emerald-100 text-emerald-800' :
+                factorData.status === 'Moderate' ? 'bg-amber-100 text-amber-800' : 'bg-rose-100 text-rose-800'
+              }">${factorData.status}</span>
+            </div>
+          `;
+          factorList.appendChild(row);
+        }
+      }
+
+      const renderList = (elementId, items) => {
+        const el = document.getElementById(elementId);
+        el.innerHTML = "";
+        if (items && items.length > 0) {
+          items.forEach(txt => {
+            const li = document.createElement("li");
+            li.textContent = txt;
+            el.appendChild(li);
+          });
+          el.parentElement.classList.remove("hidden");
+        } else {
+          el.parentElement.classList.add("hidden");
+        }
+      };
+
+      renderList("whatHelpedList", result.what_helped);
+      renderList("whatReducedList", result.what_reduced);
+      renderList("howToImproveList", result.how_to_improve);
+
+      placeholder.classList.add("hidden");
+      resultCard.classList.remove("hidden");
+
+
+      if (window.innerWidth < 1024) {
+        resultCard.scrollIntoView({ behavior: "smooth" });
+      }
+
+    } catch (err) {
+      errBox.textContent = err.message || "An error occurred while evaluating your credit score.";
+      errBox.classList.remove("hidden");
+    } finally {
+      btn.disabled = false;
+      btn.innerHTML = `
+        <span>Calculate Estimated Score</span>
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path></svg>
+      `;
+    }
+  });
+});
+</script>
+{% endblock %}

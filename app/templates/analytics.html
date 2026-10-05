@@ -1,0 +1,393 @@
+{% extends "base.html" %}
+
+{% block title %}Analytics - CreditPulse{% endblock %}
+
+{% block content %}
+<div class="space-y-8 py-2">
+  
+  <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div>
+      <div
+        class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#2E5A44]/10 text-[#2E5A44] text-xs font-semibold mb-2">
+        <span class="w-1.5 h-1.5 rounded-full bg-[#2E5A44]"></span>
+        Personalized Analytics Engine
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-[#1D1D1F]">Financial Analytics</h1>
+      <p class="text-sm text-[#86868B] mt-1">Aggregated historical metrics derived exclusively from your account
+        records.</p>
+    </div>
+
+  
+    <div class="inline-flex p-1 rounded-2xl bg-[#F5F5F7] border border-black/[0.04] text-xs font-semibold"
+      id="periodSelector">
+      <button data-period="7d"
+        class="period-btn px-3 py-1.5 rounded-xl transition text-[#86868B] hover:text-[#1D1D1F]">7 Days</button>
+      <button data-period="30d"
+        class="period-btn px-3 py-1.5 rounded-xl transition bg-white text-[#1D1D1F] shadow-sm">30 Days</button>
+      <button data-period="3m"
+        class="period-btn px-3 py-1.5 rounded-xl transition text-[#86868B] hover:text-[#1D1D1F]">3 Months</button>
+      <button data-period="6m"
+        class="period-btn px-3 py-1.5 rounded-xl transition text-[#86868B] hover:text-[#1D1D1F]">6 Months</button>
+      <button data-period="1y"
+        class="period-btn px-3 py-1.5 rounded-xl transition text-[#86868B] hover:text-[#1D1D1F]">1 Year</button>
+      <button data-period="all"
+        class="period-btn px-3 py-1.5 rounded-xl transition text-[#86868B] hover:text-[#1D1D1F]">All Time</button>
+    </div>
+  </div>
+
+
+  <div id="analyticsLoading" class="hidden text-center py-12">
+    <div class="inline-flex items-center gap-2 text-xs text-[#86868B]">
+      <svg class="animate-spin h-4 w-4 text-[#2E5A44]" fill="none" viewBox="0 0 24 24">
+        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+        <path class="opacity-75" fill="currentColor"
+          d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z">
+        </path>
+      </svg>
+      <span>Loading your analytics...</span>
+    </div>
+  </div>
+
+
+  <div id="analyticsEmpty" class="hidden card-premium p-12 text-center space-y-4 max-w-lg mx-auto my-8">
+    <div
+      class="w-16 h-16 rounded-full bg-[#F5F5F7] border border-black/[0.06] flex items-center justify-center mx-auto text-[#86868B]">
+      <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5"
+          d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z">
+        </path>
+      </svg>
+    </div>
+    <div class="space-y-1">
+      <h2 class="text-base font-bold text-[#1D1D1F]">No analytics in selected period</h2>
+      <p class="text-xs text-[#86868B]">
+        There are no evaluations or credit score records for your account in this timeframe. Run an evaluation or switch
+        to "All Time".
+      </p>
+    </div>
+    <div class="pt-2">
+      <a href="/application" class="btn-sage px-5 py-2 text-xs font-semibold">Start Evaluation</a>
+    </div>
+  </div>
+
+  <div id="analyticsContent" class="space-y-8">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+      <div class="card-premium p-5 space-y-2">
+        <span class="text-xs font-semibold uppercase tracking-wider text-[#86868B]">Total Evaluations</span>
+        <div id="statTotalEvals" class="text-2xl font-bold tracking-tight text-[#1D1D1F]">0</div>
+        <div class="text-[11px] text-[#86868B]">Within selected period</div>
+      </div>
+
+      <div class="card-premium p-5 space-y-2">
+        <span class="text-xs font-semibold uppercase tracking-wider text-[#86868B]">Approval Rate</span>
+        <div id="statApprovalRate" class="text-2xl font-bold tracking-tight text-emerald-700">0%</div>
+        <div class="text-[11px] text-[#86868B]"><span id="statApprovedCount">0</span> approved, <span
+            id="statRejectedCount">0</span> rejected</div>
+      </div>
+
+      <div class="card-premium p-5 space-y-2">
+        <span class="text-xs font-semibold uppercase tracking-wider text-[#86868B]">Total Volume Requested</span>
+        <div id="statTotalVolume" class="text-2xl font-bold tracking-tight text-[#1D1D1F]">₹0</div>
+        <div class="text-[11px] text-[#86868B]">Cumulative loan amounts</div>
+      </div>
+
+      <div class="card-premium p-5 space-y-2">
+        <span class="text-xs font-semibold uppercase tracking-wider text-[#86868B]">Average Loan Ticket</span>
+        <div id="statAvgVolume" class="text-2xl font-bold tracking-tight text-[#1D1D1F]">₹0</div>
+        <div class="text-[11px] text-[#86868B]">Per application average</div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="card-premium p-6 space-y-4">
+        <div>
+          <h2 class="text-sm font-semibold text-[#1D1D1F]">Decision Ratio</h2>
+          <p class="text-xs text-[#86868B]">Proportion of approved versus rejected applications</p>
+        </div>
+        <div class="h-64 relative flex items-center justify-center">
+          <canvas id="ratioChart"></canvas>
+          <div id="noRatioData" class="hidden text-xs text-[#86868B]">No evaluation data to display</div>
+        </div>
+      </div>
+
+      <div class="card-premium p-6 space-y-4">
+        <div>
+          <h2 class="text-sm font-semibold text-[#1D1D1F]">Loan Purpose Distribution</h2>
+          <p class="text-xs text-[#86868B]">Frequency by category requested</p>
+        </div>
+        <div class="h-64 relative flex items-center justify-center">
+          <canvas id="purposeChart"></canvas>
+          <div id="noPurposeData" class="hidden text-xs text-[#86868B]">No purpose data to display</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div class="card-premium p-6 space-y-4">
+        <div>
+          <h2 class="text-sm font-semibold text-[#1D1D1F]">Credit Score History Trend</h2>
+          <p class="text-xs text-[#86868B]">Chronological estimates calculated for your profile</p>
+        </div>
+        <div class="h-64 relative flex items-center justify-center">
+          <canvas id="analyticsScoreChart"></canvas>
+          <div id="noScoreData" class="hidden text-xs text-[#86868B]">
+            No credit score calculations in this timeframe.<br>
+            <a href="/credit-score" class="text-[#2E5A44] font-semibold hover:underline mt-1 inline-block">Run a score
+              check &rarr;</a>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-premium p-6 space-y-4">
+        <div>
+          <h2 class="text-sm font-semibold text-[#1D1D1F]">Evaluation Volume Over Time</h2>
+          <p class="text-xs text-[#86868B]">Daily activity cadence</p>
+        </div>
+        <div class="h-64 relative flex items-center justify-center">
+          <canvas id="timelineChart"></canvas>
+          <div id="noTimelineData" class="hidden text-xs text-[#86868B]">No activity points in this period</div>
+        </div>
+      </div>
+    </div>
+    
+    <div id="emiSection" class="hidden card-premium p-6 space-y-4">
+      <div>
+        <h2 class="text-sm font-semibold text-[#1D1D1F]">Repayment Performance & Discipline</h2>
+        <p class="text-xs text-[#86868B]">Based on your latest credit score simulation inputs</p>
+      </div>
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 pt-2">
+        <div class="p-4 rounded-xl bg-[#F5F5F7]">
+          <span class="text-[11px] font-semibold uppercase tracking-wider text-[#86868B] block">Total EMIs Due</span>
+          <span id="emiDue" class="text-xl font-bold text-[#1D1D1F]">--</span>
+        </div>
+        <div class="p-4 rounded-xl bg-emerald-50">
+          <span class="text-[11px] font-semibold uppercase tracking-wider text-emerald-800 block">On-Time EMIs</span>
+          <span id="emiOnTime" class="text-xl font-bold text-emerald-800">--</span>
+        </div>
+        <div class="p-4 rounded-xl bg-amber-50">
+          <span class="text-[11px] font-semibold uppercase tracking-wider text-amber-800 block">Late EMIs</span>
+          <span id="emiLate" class="text-xl font-bold text-amber-800">--</span>
+        </div>
+        <div class="p-4 rounded-xl bg-rose-50">
+          <span class="text-[11px] font-semibold uppercase tracking-wider text-rose-800 block">Missed / Defaulted</span>
+          <span id="emiMissed" class="text-xl font-bold text-rose-800">--</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  let charts = {};
+
+  function destroyChart(name) {
+    if (charts[name]) {
+      charts[name].destroy();
+      delete charts[name];
+    }
+  }
+
+  async function loadAnalytics(period = "30d") {
+    const loading = document.getElementById("analyticsLoading");
+    const content = document.getElementById("analyticsContent");
+    const empty = document.getElementById("analyticsEmpty");
+
+    loading.classList.remove("hidden");
+    content.classList.add("hidden");
+    empty.classList.add("hidden");
+
+    try {
+      const res = await fetch(`/api/user/analytics-data?period=${period}`);
+      if (res.status === 401) {
+        window.location.href = "/authenticate?intent=analytics";
+        return;
+      }
+      const data = await res.json();
+
+      loading.classList.add("hidden");
+
+      if (!data.has_data) {
+        empty.classList.remove("hidden");
+        return;
+      }
+
+      content.classList.remove("hidden");
+
+      document.getElementById("statTotalEvals").textContent = data.total_evaluations;
+      document.getElementById("statApprovalRate").textContent = `${data.approval_rate}%`;
+      document.getElementById("statApprovedCount").textContent = data.approved;
+      document.getElementById("statRejectedCount").textContent = data.rejected;
+      document.getElementById("statTotalVolume").textContent = `₹${data.total_loan_requested.toLocaleString()}`;
+      document.getElementById("statAvgVolume").textContent = `₹${data.avg_loan_requested.toLocaleString()}`;
+
+      destroyChart("ratio");
+      const ratioCanvas = document.getElementById("ratioChart");
+      const noRatio = document.getElementById("noRatioData");
+      if (data.total_evaluations > 0) {
+        ratioCanvas.style.display = "block";
+        noRatio.classList.add("hidden");
+        charts["ratio"] = new Chart(ratioCanvas.getContext("2d"), {
+          type: "doughnut",
+          data: {
+            labels: ["Approved", "Rejected"],
+            datasets: [{
+              data: [data.approved, data.rejected],
+              backgroundColor: ["#10B981", "#EF4444"],
+              borderWidth: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: { position: "bottom", labels: { font: { family: "Inter" } } }
+            },
+            cutout: "70%"
+          }
+        });
+      } else {
+        ratioCanvas.style.display = "none";
+        noRatio.classList.remove("hidden");
+      }
+
+      destroyChart("purpose");
+      const purposeCanvas = document.getElementById("purposeChart");
+      const noPurpose = document.getElementById("noPurposeData");
+      const purposeKeys = Object.keys(data.purposes || {});
+      if (purposeKeys.length > 0) {
+        purposeCanvas.style.display = "block";
+        noPurpose.classList.add("hidden");
+        charts["purpose"] = new Chart(purposeCanvas.getContext("2d"), {
+          type: "bar",
+          data: {
+            labels: purposeKeys,
+            datasets: [{
+              label: "Count",
+              data: purposeKeys.map(k => data.purposes[k]),
+              backgroundColor: "#2E5A44",
+              borderRadius: 6
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              y: { beginAtZero: true, grid: { color: "rgba(0,0,0,0.05)" } },
+              x: { grid: { display: false } }
+            }
+          }
+        });
+      } else {
+        purposeCanvas.style.display = "none";
+        noPurpose.classList.remove("hidden");
+      }
+
+      destroyChart("score");
+      const scoreCanvas = document.getElementById("analyticsScoreChart");
+      const noScore = document.getElementById("noScoreData");
+      if (data.score_trend && data.score_trend.length > 0) {
+        scoreCanvas.style.display = "block";
+        noScore.classList.add("hidden");
+        charts["score"] = new Chart(scoreCanvas.getContext("2d"), {
+          type: "line",
+          data: {
+            labels: data.score_trend.map(d => d.date),
+            datasets: [{
+              label: "Estimated Score",
+              data: data.score_trend.map(d => d.score),
+              borderColor: "#2E5A44",
+              backgroundColor: "rgba(46, 90, 68, 0.08)",
+              borderWidth: 2,
+              pointBackgroundColor: "#2E5A44",
+              fill: true,
+              tension: 0.3
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              y: { min: 300, max: 900, grid: { color: "rgba(0,0,0,0.05)" } },
+              x: { grid: { display: false } }
+            }
+          }
+        });
+      } else {
+        scoreCanvas.style.display = "none";
+        noScore.classList.remove("hidden");
+      }
+
+      destroyChart("timeline");
+      const timeCanvas = document.getElementById("timelineChart");
+      const noTime = document.getElementById("noTimelineData");
+      if (data.timeline && data.timeline.length > 0) {
+        timeCanvas.style.display = "block";
+        noTime.classList.add("hidden");
+        charts["timeline"] = new Chart(timeCanvas.getContext("2d"), {
+          type: "line",
+          data: {
+            labels: data.timeline.map(d => d.date),
+            datasets: [{
+              label: "Evaluations",
+              data: data.timeline.map(d => d.count),
+              borderColor: "#1D1D1F",
+              backgroundColor: "rgba(29, 29, 31, 0.05)",
+              borderWidth: 2,
+              pointBackgroundColor: "#1D1D1F",
+              fill: true,
+              tension: 0.3
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: { legend: { display: false } },
+            scales: {
+              y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: "rgba(0,0,0,0.05)" } },
+              x: { grid: { display: false } }
+            }
+          }
+        });
+      } else {
+        timeCanvas.style.display = "none";
+        noTime.classList.remove("hidden");
+      }
+
+      const emiBox = document.getElementById("emiSection");
+      if (data.emi_stats) {
+        emiBox.classList.remove("hidden");
+        document.getElementById("emiDue").textContent = data.emi_stats.total_due;
+        document.getElementById("emiOnTime").textContent = data.emi_stats.on_time;
+        document.getElementById("emiLate").textContent = data.emi_stats.late;
+        document.getElementById("emiMissed").textContent = data.emi_stats.missed;
+      } else {
+        emiBox.classList.add("hidden");
+      }
+
+    } catch (e) {
+      console.error("Analytics fetch error:", e);
+      loading.classList.add("hidden");
+      empty.classList.remove("hidden");
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    const buttons = document.querySelectorAll(".period-btn");
+    buttons.forEach(btn => {
+      btn.addEventListener("click", () => {
+        buttons.forEach(b => {
+          b.className = "period-btn px-3 py-1.5 rounded-xl transition text-[#86868B] hover:text-[#1D1D1F]";
+        });
+        btn.className = "period-btn px-3 py-1.5 rounded-xl transition bg-white text-[#1D1D1F] shadow-sm";
+        loadAnalytics(btn.dataset.period);
+      });
+    });
+
+    loadAnalytics("30d");
+  });
+</script>
+{% endblock %}

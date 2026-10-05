@@ -1,65 +1,72 @@
 {% extends "base.html" %}
 
-{% block title %}Loan Application - CreditPulse{% endblock %}
+{% block title %}Credit Evaluation - CreditPulse{% endblock %}
 
 {% block content %}
-<div class="max-w-4xl mx-auto">
-  <div class="mb-8 text-center">
-    <h1 class="text-2xl font-bold text-[#1F2E26] tracking-tight">Loan Eligibility Assessment</h1>
-    <p class="text-sm text-[#5C6E64] mt-1">Fill in the applicant's financial and demographic details to evaluate risk.
+<div class="max-w-3xl mx-auto py-4 sm:py-8">
+  
+  <div class="text-center mb-8 sm:mb-10">
+    <h1 class="text-3xl sm:text-4xl font-semibold tracking-tight text-[#1D1D1F]">Credit Evaluation</h1>
+    <p class="text-sm sm:text-base text-[#86868B] mt-2 max-w-md mx-auto">
+      Enter applicant financial and demographic details to assess loan eligibility.
     </p>
   </div>
 
-  <form id="loanForm" class="custom-card rounded-2xl p-8 space-y-8">
+
+  <form id="loanForm" 
+        data-authenticated="{{ 'true' if user else 'false' }}" 
+        class="custom-card p-6 sm:p-10 space-y-8" 
+        novalidate>
+
 
     <div>
-      <h2 class="text-sm font-semibold uppercase tracking-wider text-[#2E5A44] mb-4 pb-2 border-b border-[#E2E8E4]">
-        1. Personal & Employment Information
-      </h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+      <div class="flex items-center gap-2 pb-2 mb-4 border-b border-black/[0.06]">
+        <span class="w-6 h-6 rounded-full bg-[#2E5A44]/10 text-[#2E5A44] text-xs font-bold flex items-center justify-center">1</span>
+        <h2 class="text-xs font-semibold uppercase tracking-wider text-[#1D1D1F]">Personal & Demographic Profile</h2>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-5">
         <div>
-          <label class="block text-xs font-medium text-[#5C6E64] mb-1">Gender</label>
-          <select name="Gender" class="input-sage w-full rounded-lg px-3 py-2 text-sm" required>
+          <label class="block text-xs font-semibold text-[#1D1D1F] mb-1.5">Gender</label>
+          <select name="Gender" class="input-sage w-full px-3.5 py-2.5 text-sm" required>
             <option value="Male">Male</option>
             <option value="Female">Female</option>
           </select>
         </div>
         <div>
-          <label class="block text-xs font-medium text-[#5C6E64] mb-1">Age (Years)</label>
-          <input type="number" name="Age" min="18" max="80" value="35"
-            class="input-sage w-full rounded-lg px-3 py-2 text-sm" required>
+          <label class="block text-xs font-semibold text-[#1D1D1F] mb-1.5">Age (Years)</label>
+          <input type="number" name="Age" min="18" max="100" value="35"
+            class="input-sage w-full px-3.5 py-2.5 text-sm" required>
         </div>
         <div>
-          <label class="block text-xs font-medium text-[#5C6E64] mb-1">Marital Status</label>
-          <select name="Marital_Status" class="input-sage w-full rounded-lg px-3 py-2 text-sm" required>
+          <label class="block text-xs font-semibold text-[#1D1D1F] mb-1.5">Marital Status</label>
+          <select name="Marital_Status" class="input-sage w-full px-3.5 py-2.5 text-sm" required>
             <option value="Single">Single</option>
             <option value="Married">Married</option>
           </select>
         </div>
         <div>
-          <label class="block text-xs font-medium text-[#5C6E64] mb-1">Dependents</label>
+          <label class="block text-xs font-semibold text-[#1D1D1F] mb-1.5">Dependents</label>
           <input type="number" name="Dependents" min="0" max="10" value="1"
-            class="input-sage w-full rounded-lg px-3 py-2 text-sm" required>
+            class="input-sage w-full px-3.5 py-2.5 text-sm" required>
         </div>
         <div>
-          <label class="block text-xs font-medium text-[#5C6E64] mb-1">Education Level</label>
-          <select name="Education_Level" class="input-sage w-full rounded-lg px-3 py-2 text-sm" required>
+          <label class="block text-xs font-semibold text-[#1D1D1F] mb-1.5">Education</label>
+          <select name="Education_Level" class="input-sage w-full px-3.5 py-2.5 text-sm" required>
             <option value="Graduate">Graduate</option>
             <option value="Not Graduate">Not Graduate</option>
           </select>
         </div>
         <div>
-          <label class="block text-xs font-medium text-[#5C6E64] mb-1">Employment Status</label>
-          <select name="Employment_Status" class="input-sage w-full rounded-lg px-3 py-2 text-sm" required>
+          <label class="block text-xs font-semibold text-[#1D1D1F] mb-1.5">Employment Status</label>
+          <select name="Employment_Status" class="input-sage w-full px-3.5 py-2.5 text-sm" required>
             <option value="Salaried">Salaried</option>
-            <option value="Self-employed">Self-employed</option>
-            <option value="Contract">Contract</option>
+            <option value="Self-Employed">Self-Employed</option>
             <option value="Unemployed">Unemployed</option>
           </select>
         </div>
-        <div class="md:col-span-3">
-          <label class="block text-xs font-medium text-[#5C6E64] mb-1">Employer Category</label>
-          <select name="Employer_Category" class="input-sage w-full rounded-lg px-3 py-2 text-sm" required>
+        <div class="sm:col-span-2 md:col-span-3">
+          <label class="block text-xs font-semibold text-[#1D1D1F] mb-1.5">Employer Category</label>
+          <select name="Employer_Category" class="input-sage w-full px-3.5 py-2.5 text-sm" required>
             <option value="Private">Private Sector</option>
             <option value="Government">Government / Public Sector</option>
             <option value="MNC">Multinational Corporation (MNC)</option>
@@ -69,95 +76,171 @@
       </div>
     </div>
 
+
     <div>
-      <h2 class="text-sm font-semibold uppercase tracking-wider text-[#2E5A44] mb-4 pb-2 border-b border-[#E2E8E4]">
-        2. Financial Profile & Stability
-      </h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+      <div class="flex items-center gap-2 pb-2 mb-4 border-b border-black/[0.06]">
+        <span class="w-6 h-6 rounded-full bg-[#2E5A44]/10 text-[#2E5A44] text-xs font-bold flex items-center justify-center">2</span>
+        <h2 class="text-xs font-semibold uppercase tracking-wider text-[#1D1D1F]">Financial Stability & Score</h2>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-5">
         <div>
-          <label class="block text-xs font-medium text-[#5C6E64] mb-1">Applicant Income (₹ / month)</label>
-          <input type="number" name="Applicant_Income" step="100" value="12000"
-            class="input-sage w-full rounded-lg px-3 py-2 text-sm" required>
+          <label class="block text-xs font-semibold text-[#1D1D1F] mb-1.5">Applicant Income (₹ / mo)</label>
+          <input type="number" name="Applicant_Income" step="100" min="0" value="50000"
+            class="input-sage w-full px-3.5 py-2.5 text-sm" required>
         </div>
         <div>
-          <label class="block text-xs font-medium text-[#5C6E64] mb-1">Co-applicant Income (₹ / month)</label>
-          <input type="number" name="Coapplicant_Income" step="100" value="3000"
-            class="input-sage w-full rounded-lg px-3 py-2 text-sm" required>
+          <label class="block text-xs font-semibold text-[#1D1D1F] mb-1.5">Co-applicant Income (₹ / mo)</label>
+          <input type="number" name="Coapplicant_Income" step="100" min="0" value="15000"
+            class="input-sage w-full px-3.5 py-2.5 text-sm" required>
         </div>
         <div>
-          <label class="block text-xs font-medium text-[#5C6E64] mb-1">Credit Score (300 - 900)</label>
-          <input type="number" name="Credit_Score" min="300" max="900" value="680"
-            class="input-sage w-full rounded-lg px-3 py-2 text-sm" required>
+          <label class="block text-xs font-semibold text-[#1D1D1F] mb-1.5">Credit Score (300 - 900)</label>
+          <input type="number" name="Credit_Score" min="300" max="900" value="750"
+            class="input-sage w-full px-3.5 py-2.5 text-sm" required>
         </div>
         <div>
-          <label class="block text-xs font-medium text-[#5C6E64] mb-1">Existing Running Loans</label>
-          <input type="number" name="Existing_Loans" min="0" max="10" value="1"
-            class="input-sage w-full rounded-lg px-3 py-2 text-sm" required>
+          <label class="block text-xs font-semibold text-[#1D1D1F] mb-1.5">Existing Running Loans</label>
+          <input type="number" name="Existing_Loans" min="0" max="10" value="0"
+            class="input-sage w-full px-3.5 py-2.5 text-sm" required>
         </div>
         <div>
-          <label class="block text-xs font-medium text-[#5C6E64] mb-1">Debt-to-Income (DTI) Ratio</label>
-          <input type="number" step="0.01" name="DTI_Ratio" min="0.0" max="1.0" value="0.30"
-            class="input-sage w-full rounded-lg px-3 py-2 text-sm" required>
+          <label class="block text-xs font-semibold text-[#1D1D1F] mb-1.5">Debt-to-Income (DTI %)</label>
+          <input type="number" step="0.1" name="DTI_Ratio" min="0.0" max="100.0" value="25.5"
+            class="input-sage w-full px-3.5 py-2.5 text-sm" required>
         </div>
         <div>
-          <label class="block text-xs font-medium text-[#5C6E64] mb-1">Savings Balance (₹)</label>
-          <input type="number" name="Savings" step="500" value="15000"
-            class="input-sage w-full rounded-lg px-3 py-2 text-sm" required>
+          <label class="block text-xs font-semibold text-[#1D1D1F] mb-1.5">Savings Balance (₹)</label>
+          <input type="number" name="Savings" step="500" min="0" value="120000"
+            class="input-sage w-full px-3.5 py-2.5 text-sm" required>
         </div>
       </div>
     </div>
 
+
     <div>
-      <h2 class="text-sm font-semibold uppercase tracking-wider text-[#2E5A44] mb-4 pb-2 border-b border-[#E2E8E4]">
-        3. Loan Request & Property
-      </h2>
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+      <div class="flex items-center gap-2 pb-2 mb-4 border-b border-black/[0.06]">
+        <span class="w-6 h-6 rounded-full bg-[#2E5A44]/10 text-[#2E5A44] text-xs font-bold flex items-center justify-center">3</span>
+        <h2 class="text-xs font-semibold uppercase tracking-wider text-[#1D1D1F]">Loan Request & Collateral</h2>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-5">
         <div>
-          <label class="block text-xs font-medium text-[#5C6E64] mb-1">Requested Loan Amount (₹)</label>
-          <input type="number" name="Loan_Amount" step="1000" value="25000"
-            class="input-sage w-full rounded-lg px-3 py-2 text-sm" required>
+          <label class="block text-xs font-semibold text-[#1D1D1F] mb-1.5">Loan Amount (₹)</label>
+          <input type="number" name="Loan_Amount" step="1000" min="1000" value="250000"
+            class="input-sage w-full px-3.5 py-2.5 text-sm" required>
         </div>
         <div>
-          <label class="block text-xs font-medium text-[#5C6E64] mb-1">Loan Term (Months)</label>
-          <input type="number" name="Loan_Term" value="48" class="input-sage w-full rounded-lg px-3 py-2 text-sm"
-            required>
+          <label class="block text-xs font-semibold text-[#1D1D1F] mb-1.5">Loan Term (Months)</label>
+          <input type="number" name="Loan_Term" min="6" max="360" value="36" 
+            class="input-sage w-full px-3.5 py-2.5 text-sm" required>
         </div>
         <div>
-          <label class="block text-xs font-medium text-[#5C6E64] mb-1">Collateral Value (₹)</label>
-          <input type="number" name="Collateral_Value" step="1000" value="30000"
-            class="input-sage w-full rounded-lg px-3 py-2 text-sm" required>
+          <label class="block text-xs font-semibold text-[#1D1D1F] mb-1.5">Collateral Value (₹)</label>
+          <input type="number" name="Collateral_Value" step="1000" min="0" value="500000"
+            class="input-sage w-full px-3.5 py-2.5 text-sm" required>
         </div>
         <div>
-          <label class="block text-xs font-medium text-[#5C6E64] mb-1">Loan Purpose</label>
-          <select name="Loan_Purpose" class="input-sage w-full rounded-lg px-3 py-2 text-sm" required>
-            <option value="Personal">Personal</option>
+          <label class="block text-xs font-semibold text-[#1D1D1F] mb-1.5">Loan Purpose</label>
+          <select name="Loan_Purpose" class="input-sage w-full px-3.5 py-2.5 text-sm" required>
             <option value="Home">Home</option>
+            <option value="Personal">Personal</option>
             <option value="Business">Business</option>
             <option value="Education">Education</option>
             <option value="Car">Car</option>
           </select>
         </div>
-        <div class="md:col-span-2">
-          <label class="block text-xs font-medium text-[#5C6E64] mb-1">Property Area</label>
-          <select name="Property_Area" class="input-sage w-full rounded-lg px-3 py-2 text-sm" required>
+        <div class="sm:col-span-2">
+          <label class="block text-xs font-semibold text-[#1D1D1F] mb-1.5">Property Area</label>
+          <select name="Property_Area" class="input-sage w-full px-3.5 py-2.5 text-sm" required>
             <option value="Urban">Urban</option>
-            <option value="Semiurban">Semi-Urban</option>
+            <option value="Semiurban">Semiurban</option>
             <option value="Rural">Rural</option>
           </select>
         </div>
       </div>
     </div>
 
-    <div class="pt-4">
+
+    <div class="pt-6 border-t border-black/[0.06] flex flex-col items-center">
+      <div id="evaluationErrorBanner" class="hidden w-full max-w-sm mb-4 p-3.5 rounded-xl bg-rose-50 border border-rose-200 text-rose-800 text-xs font-medium text-center"></div>
+      
       <button type="submit" id="submitBtn"
-        class="btn-sage w-full py-3 rounded-lg text-sm font-semibold tracking-wide flex items-center justify-center space-x-2">
-        <span>Evaluate Application</span>
+        class="btn-sage w-full max-w-sm py-3.5 px-8 text-sm font-semibold tracking-wide flex items-center justify-center gap-2">
+        <span>Evaluate Credit</span>
       </button>
+      <p class="text-[11px] text-[#86868B] mt-3">
+        Instant AI evaluation • Secure and confidential calculation
+      </p>
     </div>
   </form>
+
+  <div id="evaluationSuccessCard" class="hidden mt-8 card-premium p-6 sm:p-8 space-y-6 border-[#2E5A44]/30 shadow-lg bg-white">
+    <div class="flex items-start gap-4">
+      <div class="w-10 h-10 rounded-full bg-emerald-100 text-emerald-700 flex items-center justify-center flex-shrink-0 text-xl font-bold">
+        ✓
+      </div>
+      <div class="flex-1 min-w-0">
+        <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 text-[11px] font-bold uppercase tracking-wider mb-1">
+          Database Confirmed
+        </div>
+        <h2 class="text-lg font-bold text-[#1D1D1F]" id="evalSuccessHeading">
+          ✓ Evaluation completed and saved to your history.
+        </h2>
+        <p class="text-xs text-[#86868B] mt-0.5">
+          Your credit application record has been safely written to MongoDB and linked to your account.
+        </p>
+      </div>
+    </div>
+
+
+    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+      <div class="bg-[#F5F5F7] p-4 rounded-2xl border border-black/[0.04]">
+        <div class="text-[10px] font-bold uppercase tracking-wider text-[#86868B] mb-1">Decision</div>
+        <div class="flex items-center gap-2">
+          <span id="evalStatusBadge" class="px-2.5 py-1 rounded-full text-xs font-bold uppercase tracking-wider">--</span>
+        </div>
+      </div>
+      <div class="bg-[#F5F5F7] p-4 rounded-2xl border border-black/[0.04]">
+        <div class="text-[10px] font-bold uppercase tracking-wider text-[#86868B] mb-1">Confidence</div>
+        <div id="evalProbValue" class="text-xl font-extrabold text-[#2E5A44]">--%</div>
+      </div>
+      <div class="bg-[#F5F5F7] p-4 rounded-2xl border border-black/[0.04]">
+        <div class="text-[10px] font-bold uppercase tracking-wider text-[#86868B] mb-1">Requested Loan</div>
+        <div id="evalAmountValue" class="text-xl font-bold text-[#1D1D1F]">₹--</div>
+      </div>
+    </div>
+
+
+    <div class="pt-4 border-t border-black/[0.06] flex flex-wrap items-center justify-between gap-3">
+      <div class="flex flex-wrap items-center gap-2.5">
+        <a href="/history" class="btn-sage px-5 py-2 text-xs font-semibold tracking-wide inline-flex items-center gap-1.5">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          <span>View in History</span>
+        </a>
+        <a id="evalDetailsLink" href="/history" class="px-4 py-2 text-xs font-semibold text-[#1D1D1F] bg-[#F5F5F7] hover:bg-black/[0.05] rounded-full transition inline-flex items-center gap-1">
+          <span>View Record Details</span>
+          <span aria-hidden="true">&rarr;</span>
+        </a>
+        <a href="/dashboard" class="px-4 py-2 text-xs font-medium text-[#86868B] hover:text-[#1D1D1F] transition">
+          Dashboard
+        </a>
+      </div>
+      <button type="button" onclick="resetEvaluationForm()" class="text-xs font-semibold text-[#2E5A44] hover:underline">
+        Evaluate Another Proposal &rarr;
+      </button>
+    </div>
+  </div>
 </div>
 {% endblock %}
 
 {% block scripts %}
-<script src="/static/js/main.js"></script>
+<script>
+function resetEvaluationForm() {
+  const card = document.getElementById("evaluationSuccessCard");
+  if (card) card.classList.add("hidden");
+  const form = document.getElementById("loanForm");
+  if (form) {
+    form.scrollIntoView({ behavior: "smooth" });
+  }
+}
+</script>
 {% endblock %}

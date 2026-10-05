@@ -1,0 +1,366 @@
+{% extends "base.html" %}
+{% block title %}Credit Dashboard - CreditPulse{% endblock %}
+
+{% block content %}
+<div class="space-y-8">
+  <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+    <div>
+      <h1 class="text-2xl font-bold text-[#1F2E26] tracking-tight">Credit Dashboard</h1>
+      <p class="text-sm text-[#5C6E64] mt-1">Monitor your credit utilization and explore purchase possibilities.</p>
+    </div>
+    {% if user %}
+    <div class="flex items-center gap-2">
+      <span class="text-sm text-[#5C6E64]">Welcome,</span>
+      <span class="text-sm font-bold text-[#1F2E26]">{{ user.full_name or user.email }}</span>
+    </div>
+    {% endif %}
+  </div>
+
+  {% if not credit_data %}
+
+  <div class="custom-card rounded-2xl p-8 sm:p-12 text-center max-w-lg mx-auto" id="setupCard">
+    <div class="w-16 h-16 bg-[#E2E8E4] rounded-full flex items-center justify-center mx-auto mb-6 text-3xl">💳</div>
+    <h2 class="text-xl font-bold text-[#1F2E26] mb-2">Set Up Your Credit Profile</h2>
+    <p class="text-sm text-[#5C6E64] mb-6">Enter your total credit card limit to get started with spending insights and purchase suggestions.</p>
+    <form id="setupCreditForm" class="max-w-xs mx-auto space-y-4">
+      <div>
+        <label for="creditLimitInput" class="block text-sm font-bold text-[#2E5A44] mb-1 text-left">Credit Limit (₹)</label>
+        <input type="number" id="creditLimitInput" placeholder="e.g. 100000" min="1000" step="1000"
+          class="input-sage w-full rounded-xl px-4 py-3 text-sm" required aria-describedby="creditLimitHelp">
+        <span id="creditLimitHelp" class="text-xs text-[#5C6E64] mt-1 block text-left">Enter the total limit on your credit card</span>
+      </div>
+      <button type="submit" id="btnSetupCredit" class="btn-sage w-full py-3 rounded-xl font-bold text-sm flex items-center justify-center gap-2">
+        <span>Set Up Credit Profile</span>
+      </button>
+    </form>
+  </div>
+  {% else %}
+  
+
+  <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+    <div class="credit-stat-card">
+      <p class="text-xs font-bold text-[#5C6E64] uppercase tracking-wider mb-1">Credit Limit</p>
+      <p class="text-xl sm:text-2xl font-extrabold text-[#1F2E26]">₹<span id="statLimit">{{ "{:,.0f}".format(credit_data.credit_limit) }}</span></p>
+    </div>
+    <div class="credit-stat-card">
+      <p class="text-xs font-bold text-[#5C6E64] uppercase tracking-wider mb-1">Used Credit</p>
+      <p class="text-xl sm:text-2xl font-extrabold text-[#DC2626]">₹<span id="statUsed">{{ "{:,.0f}".format(credit_data.used_credit) }}</span></p>
+    </div>
+    <div class="credit-stat-card">
+      <p class="text-xs font-bold text-[#5C6E64] uppercase tracking-wider mb-1">Available Credit</p>
+      <p class="text-xl sm:text-2xl font-extrabold text-[#059669]">₹<span id="statAvailable">{{ "{:,.0f}".format(credit_data.available_credit) }}</span></p>
+    </div>
+    <div class="credit-stat-card">
+      <p class="text-xs font-bold text-[#5C6E64] uppercase tracking-wider mb-1">Utilization</p>
+      <p class="text-xl sm:text-2xl font-extrabold" id="statUtilization" 
+         style="color: {% if credit_data.utilization <= 30 %}#059669{% elif credit_data.utilization <= 70 %}#D97706{% else %}#DC2626{% endif %}">
+        {{ credit_data.utilization }}%
+      </p>
+    </div>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+    <div class="space-y-6">
+      
+      <div class="custom-card rounded-2xl p-6 text-center">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-[#5C6E64] mb-5">Credit Utilization</h3>
+        <div class="credit-ring-container">
+          <svg viewBox="0 0 200 200">
+            <circle class="credit-ring-bg" cx="100" cy="100" r="85"></circle>
+            <circle class="credit-ring-fill" id="utilizationRing" cx="100" cy="100" r="85"
+              stroke-dasharray="534.07"
+              stroke-dashoffset="{{ 534.07 - (534.07 * credit_data.utilization / 100) }}"
+              stroke="{% if credit_data.utilization <= 30 %}#059669{% elif credit_data.utilization <= 70 %}#D97706{% else %}#DC2626{% endif %}">
+            </circle>
+          </svg>
+          <div class="credit-ring-label">
+            <div class="credit-ring-pct" id="ringPct" 
+                 style="color: {% if credit_data.utilization <= 30 %}#059669{% elif credit_data.utilization <= 70 %}#D97706{% else %}#DC2626{% endif %}">
+              {{ credit_data.utilization }}%
+            </div>
+            <div class="credit-ring-subtext">Utilization</div>
+          </div>
+        </div>
+        <div class="mt-4 space-y-2 text-left">
+          <div class="flex justify-between text-xs">
+            <span class="text-[#5C6E64]">0% — Excellent</span>
+            <span class="text-[#059669] font-bold">≤30%</span>
+          </div>
+          <div class="flex justify-between text-xs">
+            <span class="text-[#5C6E64]">Moderate</span>
+            <span class="text-[#D97706] font-bold">31-70%</span>
+          </div>
+          <div class="flex justify-between text-xs">
+            <span class="text-[#5C6E64]">High — Risky</span>
+            <span class="text-[#DC2626] font-bold">&gt;70%</span>
+          </div>
+        </div>
+      </div>
+
+
+      <div class="simulator-card">
+        <h3 class="text-sm font-bold uppercase tracking-wider text-white/80 mb-4">💡 Purchase Simulator</h3>
+        <p class="text-xs text-white/60 mb-4">Enter an amount to see its impact on your credit.</p>
+        <input type="number" id="simAmount" placeholder="₹ Enter amount" min="1" step="100"
+          class="sim-input mb-4" aria-label="Simulated purchase amount">
+        <button type="button" id="btnSimulate" class="w-full bg-white/15 hover:bg-white/25 text-white font-bold rounded-xl px-4 py-3 transition-all text-sm border border-white/10">
+          Simulate Purchase
+        </button>
+        <div id="simResult" class="hidden mt-4 space-y-3 pt-4 border-t border-white/10">
+        </div>
+        <p class="text-[10px] text-white/40 mt-3">⚠️ This is an estimate only and does not represent an actual transaction.</p>
+      </div>
+
+      <div class="custom-card rounded-2xl p-5">
+        <h3 class="text-xs font-bold uppercase tracking-wider text-[#5C6E64] mb-3">Update Credit Limit</h3>
+        <form id="updateCreditForm" class="flex gap-2">
+          <input type="number" id="newCreditLimit" placeholder="New limit" min="1000" step="1000"
+            class="input-sage flex-1 rounded-xl px-3 py-2.5 text-sm" required>
+          <button type="submit" class="btn-sage px-4 py-2.5 rounded-xl text-xs font-bold whitespace-nowrap">Update</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="lg:col-span-2 space-y-6">
+      <div class="custom-card rounded-2xl p-6">
+        <div class="flex items-center justify-between mb-5">
+          <div>
+            <h3 class="text-lg font-bold text-[#1F2E26]">What fits within your available credit?</h3>
+            <p class="text-xs text-[#5C6E64] mt-1">Based on your available credit of <strong class="text-[#059669]">₹{{ "{:,.0f}".format(credit_data.available_credit) }}</strong></p>
+          </div>
+          <div class="flex gap-1">
+            <span class="status-badge badge-affordable">Fits</span>
+            <span class="status-badge badge-near_limit">Near</span>
+            <span class="status-badge badge-over_limit">Over</span>
+          </div>
+        </div>
+
+        <div class="space-y-3" id="categoriesContainer">
+          {% for cat in credit_data.suggestions %}
+          <div class="border border-[#E2E8E4] rounded-xl overflow-hidden">
+            <div class="category-header flex items-center justify-between p-4" onclick="toggleCategory(this)">
+              <div class="flex items-center gap-3">
+                <span class="text-xl">{{ cat.icon }}</span>
+                <span class="font-bold text-sm text-[#1F2E26]">{{ cat.category }}</span>
+                <span class="text-xs text-[#5C6E64]">{{ cat['items']|length }} items</span>
+              </div>
+              <svg class="category-chevron w-4 h-4 text-[#5C6E64]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+              </svg>
+            </div>
+            <div class="category-items">
+              <div class="px-4 pb-4 space-y-2">
+                {% for item in cat['items'] %}
+                <div class="purchase-item {{ item.status }}">
+                  <div class="flex-1 min-w-0">
+                    <p class="text-sm font-semibold text-[#1F2E26] truncate">{{ item.name }}</p>
+                    <p class="text-xs text-[#5C6E64]">{{ item.status_label }}</p>
+                  </div>
+                  <div class="flex items-center gap-3 flex-shrink-0">
+                    <span class="text-sm font-bold text-[#1F2E26]">₹{{ "{:,.0f}".format(item.price or 0) }}</span>
+                    <span class="status-badge badge-{{ item.status }}">
+                      {% if item.status == 'affordable' %}Fits{% elif item.status == 'near_limit' %}Near{% else %}Over{% endif %}
+                    </span>
+                  </div>
+                </div>
+                {% endfor %}
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="custom-card rounded-2xl p-6">
+        <h3 class="text-sm font-bold uppercase tracking-wider text-[#5C6E64] mb-4">Record a Transaction</h3>
+        <form id="addTransactionForm" class="grid grid-cols-1 sm:grid-cols-4 gap-3">
+          <input type="number" id="txnAmount" placeholder="Amount (₹)" min="1" step="100"
+            class="input-sage rounded-xl px-3 py-2.5 text-sm" required aria-label="Transaction amount">
+          <input type="text" id="txnDesc" placeholder="Description" maxlength="200"
+            class="input-sage rounded-xl px-3 py-2.5 text-sm sm:col-span-2" required aria-label="Transaction description">
+          <button type="submit" id="btnAddTxn" class="btn-sage px-4 py-2.5 rounded-xl text-xs font-bold">
+            Add Transaction
+          </button>
+        </form>
+      </div>
+
+      {% if credit_data.transactions %}
+      <div class="custom-card rounded-2xl overflow-hidden">
+        <div class="px-6 py-4 border-b border-[#E2E8E4] bg-[#FAFCFA]">
+          <h3 class="text-xs font-bold uppercase tracking-wider text-[#1F2E26]">Recent Transactions</h3>
+        </div>
+        <div class="divide-y divide-[#E2E8E4]">
+          {% for txn in credit_data.transactions | reverse %}
+          <div class="px-6 py-3.5 flex items-center justify-between hover:bg-[#F4F7F5] transition">
+            <div>
+              <p class="text-sm font-semibold text-[#1F2E26]">{{ txn.description }}</p>
+              <p class="text-xs text-[#5C6E64]">{{ txn.category }} • {{ txn.date }}</p>
+            </div>
+            <span class="text-sm font-bold text-[#DC2626]">-₹{{ "{:,.0f}".format(txn.amount or 0) }}</span>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
+  </div>
+
+  {% endif %}
+</div>
+
+<script id="creditData" type="application/json">
+  {{ credit_data | tojson | safe if credit_data else 'null' }}
+</script>
+{% endblock %}
+
+{% block scripts %}
+<script>
+
+  function toggleCategory(header) {
+    const items = header.nextElementSibling;
+    const chevron = header.querySelector('.category-chevron');
+    items.classList.toggle('open');
+    chevron.classList.toggle('rotated');
+  }
+  window.toggleCategory = toggleCategory;
+
+  document.getElementById('setupCreditForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = document.getElementById('btnSetupCredit');
+    const limit = parseFloat(document.getElementById('creditLimitInput').value);
+    if (!limit || limit < 1000) { showToast('error', 'Invalid', 'Minimum credit limit is ₹1,000'); return; }
+    
+    btn.innerHTML = '<span class="spinner"></span><span>Setting up...</span>';
+    btn.disabled = true;
+    
+    try {
+      const token = localStorage.getItem('creditpulse_token');
+      const res = await fetch('/api/credit-profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ credit_limit: limit })
+      });
+      if (res.ok) {
+        showToast('success', 'Profile Created', 'Your credit profile has been set up!');
+        setTimeout(() => window.location.reload(), 1000);
+      } else {
+        const data = await res.json();
+        showToast('error', 'Error', data.detail || 'Failed to create profile');
+      }
+    } catch (err) {
+      showToast('error', 'Network Error', 'Could not connect to server');
+    } finally {
+      btn.innerHTML = '<span>Set Up Credit Profile</span>';
+      btn.disabled = false;
+    }
+  });
+
+
+  document.getElementById('updateCreditForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const limit = parseFloat(document.getElementById('newCreditLimit').value);
+    if (!limit || limit < 1000) { showToast('error', 'Invalid', 'Minimum credit limit is ₹1,000'); return; }
+    
+    try {
+      const token = localStorage.getItem('creditpulse_token');
+      const res = await fetch('/api/credit-profile', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ credit_limit: limit })
+      });
+      if (res.ok) {
+        showToast('success', 'Updated', 'Credit limit updated successfully');
+        setTimeout(() => window.location.reload(), 1000);
+      } else {
+        const data = await res.json();
+        showToast('error', 'Error', data.detail || 'Failed to update');
+      }
+    } catch (err) {
+      showToast('error', 'Network Error', 'Could not connect to server');
+    }
+  });
+
+
+  document.getElementById('btnSimulate')?.addEventListener('click', async () => {
+    const amount = parseFloat(document.getElementById('simAmount').value);
+    if (!amount || amount <= 0) { showToast('warning', 'Enter Amount', 'Please enter a valid purchase amount'); return; }
+    
+    try {
+      const token = localStorage.getItem('creditpulse_token');
+      const res = await fetch('/api/simulate-purchase', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ amount })
+      });
+      const data = await res.json();
+      if (!res.ok) { showToast('error', 'Error', data.detail || 'Simulation failed'); return; }
+      
+      const resultDiv = document.getElementById('simResult');
+      const fits = data.fits_within_credit;
+      resultDiv.innerHTML = `
+        <div class="flex items-center gap-2 mb-2">
+          <span class="text-lg">${fits ? '✅' : '❌'}</span>
+          <span class="text-sm font-bold">${fits ? 'Fits within your available credit' : 'Exceeds your available credit'}</span>
+        </div>
+        <div class="grid grid-cols-2 gap-3 text-xs">
+          <div>
+            <p class="text-white/60">Available Before</p>
+            <p class="font-bold text-base">₹${data.available_before.toLocaleString('en-IN')}</p>
+          </div>
+          <div>
+            <p class="text-white/60">Remaining After</p>
+            <p class="font-bold text-base ${fits ? 'text-green-300' : 'text-red-300'}">₹${data.remaining_after.toLocaleString('en-IN')}</p>
+          </div>
+          <div>
+            <p class="text-white/60">Current Utilization</p>
+            <p class="font-bold">${data.current_utilization}%</p>
+          </div>
+          <div>
+            <p class="text-white/60">New Utilization</p>
+            <p class="font-bold ${data.new_utilization > 70 ? 'text-red-300' : ''}">${data.new_utilization}%</p>
+          </div>
+        </div>
+        ${data.warning ? `<p class="text-xs text-yellow-200 mt-3 bg-white/10 p-2 rounded-lg">⚠️ ${data.warning}</p>` : ''}
+      `;
+      resultDiv.classList.remove('hidden');
+    } catch (err) {
+      showToast('error', 'Error', 'Simulation failed');
+    }
+  });
+
+
+  document.getElementById('addTransactionForm')?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const amount = parseFloat(document.getElementById('txnAmount').value);
+    const desc = document.getElementById('txnDesc').value.trim();
+    if (!amount || amount <= 0 || !desc) { showToast('warning', 'Invalid', 'Please enter amount and description'); return; }
+    
+    const btn = document.getElementById('btnAddTxn');
+    btn.disabled = true;
+    btn.textContent = 'Adding...';
+    
+    try {
+      const token = localStorage.getItem('creditpulse_token');
+      const res = await fetch('/api/credit-transaction', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}` },
+        body: JSON.stringify({ amount, description: desc, category: 'General' })
+      });
+      if (res.ok) {
+        showToast('success', 'Recorded', 'Transaction added successfully');
+        setTimeout(() => window.location.reload(), 1000);
+      } else {
+        const data = await res.json();
+        showToast('error', 'Error', data.detail || 'Failed to add transaction');
+      }
+    } catch (err) {
+      showToast('error', 'Network Error', 'Could not connect to server');
+    } finally {
+      btn.disabled = false;
+      btn.textContent = 'Add Transaction';
+    }
+  });
+</script>
+<script src="/static/js/main.js"></script>
+{% endblock %}

@@ -3,86 +3,341 @@
 {% block title %}Dashboard - CreditPulse{% endblock %}
 
 {% block content %}
-<div class="space-y-8">
-  <div>
-    <h1 class="text-2xl font-bold text-[#1F2E26] tracking-tight">Records & Analytics</h1>
-    <p class="text-sm text-[#5C6E64] mt-1">Review historical evaluated applications and automated decisions.</p>
+<div class="space-y-8 py-2">
+
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div>
+      <div class="inline-flex items-center gap-2 px-2.5 py-0.5 rounded-full bg-[#2E5A44]/10 text-[#2E5A44] text-xs font-semibold mb-2">
+        <span class="w-1.5 h-1.5 rounded-full bg-[#2E5A44]"></span>
+        Authenticated User Dashboard
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-[#1D1D1F]">
+        Welcome back, {{ user.full_name or user.email }}
+      </h1>
+      <p class="text-sm text-[#86868B] mt-1">
+        Real-time financial analytics and automated decision history for your account.
+      </p>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <a href="/application" class="btn-sage px-4 py-2.5 text-xs font-semibold tracking-wide flex items-center gap-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+        <span>New Evaluation</span>
+      </a>
+      <a href="/credit-score" class="px-4 py-2.5 text-xs font-semibold tracking-wide rounded-full border border-black/[0.08] hover:bg-black/[0.03] text-[#1D1D1F] transition flex items-center gap-2">
+        <svg class="w-4 h-4 text-[#2E5A44]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+        <span>Check Score</span>
+      </a>
+    </div>
   </div>
 
-  <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-    <div class="custom-card p-6 rounded-xl">
-      <h3 class="text-xs font-bold uppercase tracking-wider text-[#5C6E64] mb-4">Approval vs Rejection Ratio</h3>
-      <div class="h-56">
-        <canvas id="approvalChart"></canvas>
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+  
+    <div class="card-premium p-5 space-y-3">
+      <div class="flex items-center justify-between text-[#86868B]">
+        <span class="text-xs font-semibold uppercase tracking-wider">Total Evaluations</span>
+        <div class="w-7 h-7 rounded-full bg-[#F5F5F7] flex items-center justify-center">
+          <svg class="w-3.5 h-3.5 text-[#1D1D1F]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+        </div>
+      </div>
+      <div>
+        <div class="text-2xl font-bold tracking-tight text-[#1D1D1F]">{{ summary.total_evaluations }}</div>
+        <div class="text-xs text-[#86868B] mt-0.5 flex items-center gap-1.5">
+          <span class="text-emerald-700 font-medium">{{ summary.approved_count }} approved</span>
+          <span>•</span>
+          <span class="text-rose-700 font-medium">{{ summary.rejected_count }} rejected</span>
+        </div>
       </div>
     </div>
-    <div class="custom-card p-6 rounded-xl">
-      <h3 class="text-xs font-bold uppercase tracking-wider text-[#5C6E64] mb-4">Loan Purpose Distribution</h3>
-      <div class="h-56">
-        <canvas id="purposeChart"></canvas>
+
+
+    <div class="card-premium p-5 space-y-3">
+      <div class="flex items-center justify-between text-[#86868B]">
+        <span class="text-xs font-semibold uppercase tracking-wider">Latest Result</span>
+        <div class="w-7 h-7 rounded-full bg-[#F5F5F7] flex items-center justify-center">
+          <svg class="w-3.5 h-3.5 text-[#1D1D1F]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"></path></svg>
+        </div>
+      </div>
+      <div>
+        {% if summary.latest_evaluation %}
+        <div class="flex items-center gap-2">
+          <span class="text-xl font-bold tracking-tight text-[#1D1D1F]">{{ summary.latest_evaluation.prediction.status }}</span>
+          <span class="px-2 py-0.5 rounded-full text-[11px] font-semibold {% if summary.latest_evaluation.prediction.status == 'Approved' %}bg-emerald-100 text-emerald-800{% else %}bg-rose-100 text-rose-800{% endif %}">
+            {{ (summary.latest_evaluation.prediction.probability * 100) | round(1) }}%
+          </span>
+        </div>
+        <div class="text-xs text-[#86868B] mt-0.5 truncate">
+          {{ summary.latest_evaluation.applicant_data.Loan_Purpose or 'Loan' }} • ₹{{ summary.latest_evaluation.applicant_data.Loan_Amount }}
+        </div>
+        {% else %}
+        <div class="text-xl font-bold tracking-tight text-[#86868B]">None Yet</div>
+        <div class="text-xs text-[#86868B] mt-0.5">Run evaluation to see results</div>
+        {% endif %}
+      </div>
+    </div>
+
+  
+    <div class="card-premium p-5 space-y-3">
+      <div class="flex items-center justify-between text-[#86868B]">
+        <span class="text-xs font-semibold uppercase tracking-wider">This Month</span>
+        <div class="w-7 h-7 rounded-full bg-[#F5F5F7] flex items-center justify-center">
+          <svg class="w-3.5 h-3.5 text-[#1D1D1F]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+        </div>
+      </div>
+      <div>
+        <div class="text-2xl font-bold tracking-tight text-[#1D1D1F]">{{ summary.this_month_count }}</div>
+        <div class="text-xs text-[#86868B] mt-0.5">Applications recorded in current month</div>
+      </div>
+    </div>
+
+   
+    <div class="card-premium p-5 space-y-3">
+      <div class="flex items-center justify-between text-[#86868B]">
+        <span class="text-xs font-semibold uppercase tracking-wider">Credit Score</span>
+        <div class="w-7 h-7 rounded-full bg-[#F5F5F7] flex items-center justify-center">
+          <svg class="w-3.5 h-3.5 text-[#1D1D1F]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"></path></svg>
+        </div>
+      </div>
+      <div>
+        {% if summary.latest_score %}
+        <div class="flex items-baseline gap-2">
+          <span class="text-2xl font-bold tracking-tight text-[#1D1D1F]">{{ summary.latest_score }}</span>
+          <span class="text-xs font-medium text-[#86868B]">/ 900</span>
+          <span class="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-emerald-100 text-emerald-800">
+            {{ summary.latest_score_band }}
+          </span>
+        </div>
+        <div class="text-[11px] text-[#86868B] mt-0.5">Estimated score • Educational model</div>
+        {% else %}
+        <div class="text-xl font-bold tracking-tight text-[#86868B]">Not Calculated</div>
+        <div class="text-xs text-[#2E5A44] font-medium mt-0.5">
+          <a href="/credit-score" class="hover:underline">Run Credit Score Predictor &rarr;</a>
+        </div>
+        {% endif %}
       </div>
     </div>
   </div>
 
-  <div class="custom-card rounded-xl overflow-hidden">
-    <div class="px-6 py-4 border-b border-[#E2E8E4] flex justify-between items-center bg-[#FAFCFA]">
-      <span class="text-xs font-bold uppercase tracking-wider text-[#1F2E26]">Evaluated Applications Log</span>
-      <span class="text-xs text-[#5C6E64]">{{ applications|length }} total entries</span>
+  {% if summary.total_evaluations == 0 and not summary.latest_score %}
+ 
+  <div class="card-premium p-12 text-center space-y-4 max-w-xl mx-auto my-8">
+    <div class="w-16 h-16 rounded-full bg-[#F5F5F7] border border-black/[0.06] flex items-center justify-center mx-auto text-[#86868B]">
+      <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 13h6m-3-3v6m5 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path></svg>
     </div>
-    <div class="overflow-x-auto">
-      <table class="w-full text-left text-xs text-[#1F2E26]">
-        <thead class="bg-[#FAFCFA] text-[#5C6E64] border-b border-[#E2E8E4] uppercase font-semibold">
-          <tr>
-            <th class="px-6 py-3">Income</th>
-            <th class="px-6 py-3">Score</th>
-            <th class="px-6 py-3">Loan Amount</th>
-            <th class="px-6 py-3">Purpose</th>
-            <th class="px-6 py-3">Probability</th>
-            <th class="px-6 py-3">Decision</th>
+    <div class="space-y-1">
+      <h2 class="text-lg font-bold text-[#1D1D1F]">No evaluations yet</h2>
+      <p class="text-xs text-[#86868B] max-w-md mx-auto">
+        Your personalized dashboard and analytics will populate as soon as you evaluate your first loan application or estimate your credit score.
+      </p>
+    </div>
+    <div class="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3">
+      <a href="/application" class="btn-sage px-6 py-2.5 text-xs font-semibold tracking-wide">
+        Run Your First Evaluation
+      </a>
+      <a href="/credit-score" class="px-5 py-2.5 text-xs font-semibold tracking-wide rounded-full border border-black/[0.08] text-[#1D1D1F] hover:bg-black/[0.02]">
+        Estimate Credit Score
+      </a>
+    </div>
+  </div>
+  {% else %}
 
-            <th class="px-6 py-3 text-right">Action</th>
-          </tr>
-        </thead>
-        <tbody class="divide-y divide-[#E2E8E4]">
-          {% for app in applications %}
-          <tr class="hover:bg-[#F4F7F5] transition">
-            <td class="px-6 py-3.5 font-medium">₹{{ app.applicant_data.Applicant_Income }}</td>
-            <td class="px-6 py-3.5">{{ app.applicant_data.Credit_Score }}</td>
-            <td class="px-6 py-3.5">₹{{ app.applicant_data.Loan_Amount }}</td>
-            <td class="px-6 py-3.5">{{ app.applicant_data.Loan_Purpose }}</td>
-            <td class="px-6 py-3.5">{{ (app.prediction.probability * 100) | round(1) }}%</td>
-            <td class="px-6 py-3.5">
-              <span
-                class="px-2.5 py-1 rounded-full text-[11px] font-semibold {% if app.prediction.status == 'Approved' %}bg-emerald-100 text-emerald-800{% else %}bg-rose-100 text-rose-800{% endif %}">
-                {{ app.prediction.status }}
-              </span>
-            </td>
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+  
+    <div class="lg:col-span-7 space-y-6">
+      <div class="card-premium p-6 space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h2 class="text-sm font-semibold text-[#1D1D1F]">Credit Score Historical Trend</h2>
+            <p class="text-xs text-[#86868B]">Actual chronological calculations recorded for your account</p>
+          </div>
+          <a href="/analytics" class="text-xs font-semibold text-[#2E5A44] hover:underline">Full Analytics &rarr;</a>
+        </div>
+        <div class="h-64 relative flex items-center justify-center">
+          <canvas id="scoreTrendChart"></canvas>
+          <div id="noScoreTrendNotice" class="hidden text-center text-xs text-[#86868B] py-12">
+            No score calculations recorded yet.<br>
+            <a href="/credit-score" class="text-[#2E5A44] font-semibold hover:underline mt-1 inline-block">Calculate your first score &rarr;</a>
+          </div>
+        </div>
+      </div>
 
-            <td class="px-6 py-3.5 text-right">
-              <a href="/record/{{ app._id }}"
-                class="text-[#2E5A44] font-bold hover:underline flex items-center justify-end gap-1">
-                View Data & AI
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-                </svg>
-              </a>
-            </td>
-          </tr>
+
+      <div class="card-premium overflow-hidden">
+        <div class="p-5 border-b border-black/[0.06] flex items-center justify-between">
+          <div>
+            <h2 class="text-sm font-semibold text-[#1D1D1F]">Recent Evaluations</h2>
+            <p class="text-xs text-[#86868B]">Latest automated credit eligibility decisions</p>
+          </div>
+          <a href="/history" class="text-xs font-semibold text-[#2E5A44] hover:underline">View All ({{ all_evaluations_count }}) &rarr;</a>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs text-[#1D1D1F]">
+            <thead class="bg-[#F5F5F7] text-[#86868B] uppercase font-semibold text-[10px] tracking-wider border-b border-black/[0.06]">
+              <tr>
+                <th class="px-5 py-3">Date</th>
+                <th class="px-5 py-3">Purpose</th>
+                <th class="px-5 py-3">Amount</th>
+                <th class="px-5 py-3">Probability</th>
+                <th class="px-5 py-3">Decision</th>
+                <th class="px-5 py-3 text-right">Details</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-black/[0.04]">
+              {% for ev in evaluations %}
+              <tr class="hover:bg-black/[0.015] transition">
+                <td class="px-5 py-3.5 text-[#86868B] whitespace-nowrap">{{ ev.formatted_date }}</td>
+                <td class="px-5 py-3.5 font-medium">{{ ev.applicant_data.Loan_Purpose or 'Loan' }}</td>
+                <td class="px-5 py-3.5">₹{{ ev.applicant_data.Loan_Amount }}</td>
+                <td class="px-5 py-3.5 font-medium">{{ (ev.prediction.probability * 100) | round(1) }}%</td>
+                <td class="px-5 py-3.5">
+                  <span class="px-2.5 py-1 rounded-full text-[10px] font-semibold {% if ev.prediction.status == 'Approved' %}bg-emerald-100 text-emerald-800{% else %}bg-rose-100 text-rose-800{% endif %}">
+                    {{ ev.prediction.status }}
+                  </span>
+                </td>
+                <td class="px-5 py-3.5 text-right whitespace-nowrap">
+                  <a href="/record/{{ ev._id }}" class="text-[#2E5A44] font-semibold hover:underline">
+                    View &rarr;
+                  </a>
+                </td>
+              </tr>
+              {% else %}
+              <tr>
+                <td colspan="6" class="px-5 py-8 text-center text-[#86868B]">No evaluations recorded.</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="lg:col-span-5 space-y-6">
+      <div class="card-premium p-6 space-y-4">
+        <div class="flex items-center justify-between border-b border-black/[0.06] pb-3">
+          <div>
+            <h2 class="text-sm font-semibold text-[#1D1D1F]">Recent Activity</h2>
+            <p class="text-xs text-[#86868B]">Audit trail of actions on your account</p>
+          </div>
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        </div>
+
+        <div class="space-y-3">
+          {% for act in activities %}
+          <div class="flex items-start gap-3 p-2.5 rounded-xl hover:bg-[#F5F5F7] transition">
+            <div class="w-7 h-7 rounded-full bg-[#2E5A44]/10 text-[#2E5A44] flex items-center justify-center flex-shrink-0 mt-0.5">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+            </div>
+            <div class="min-w-0 flex-1">
+              <div class="text-xs font-semibold text-[#1D1D1F]">{{ act.action }}</div>
+              <div class="text-[11px] text-[#86868B] truncate">
+                {% if act.details.status %}
+                  Result: {{ act.details.status }} (₹{{ act.details.loan_amount }})
+                {% elif act.details.score %}
+                  Estimated Score: {{ act.details.score }} ({{ act.details.risk_band }})
+                {% else %}
+                  Account action completed
+                {% endif %}
+              </div>
+              <div class="text-[10px] text-[#86868B] mt-0.5">{{ act.time }}</div>
+            </div>
+          </div>
           {% else %}
-          <tr>
-            <td colspan="7" class="px-6 py-8 text-center text-[#5C6E64]">No evaluated applications stored yet.</td>
-          </tr>
+          <div class="text-center py-8 text-xs text-[#86868B]">
+            No recent activity recorded.
+          </div>
           {% endfor %}
-        </tbody>
-      </table>
+        </div>
+      </div>
+
+    
+      <div class="card-premium p-6 bg-gradient-to-br from-white to-[#F5F5F7] space-y-3 border-[#2E5A44]/10">
+        <h3 class="text-sm font-semibold text-[#1D1D1F]">Need a New Credit Assessment?</h3>
+        <p class="text-xs text-[#86868B] leading-relaxed">
+          Use the CreditPulse machine-learning engine to evaluate a loan proposal in seconds with personalized AI advice.
+        </p>
+        <div class="pt-1">
+          <a href="/application" class="btn-sage px-4 py-2 text-xs font-semibold inline-flex items-center gap-1.5">
+            <span>Start Evaluation</span>
+            <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+          </a>
+        </div>
+      </div>
     </div>
   </div>
+  {% endif %}
 </div>
 {% endblock %}
 
 {% block scripts %}
-<script id="appData" type="application/json">
-  {{ applications | tojson | safe }}
+<script id="scoreTrendData" type="application/json">
+  {{ score_trend | tojson | safe }}
 </script>
-<script src="/static/js/dashboard.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const trendEl = document.getElementById("scoreTrendData");
+  const canvas = document.getElementById("scoreTrendChart");
+  const notice = document.getElementById("noScoreTrendNotice");
+
+  if (!canvas || !trendEl) return;
+
+  try {
+    const trendData = JSON.parse(trendEl.textContent || "[]");
+    if (!trendData || trendData.length === 0) {
+      canvas.style.display = "none";
+      notice.classList.remove("hidden");
+      return;
+    }
+
+    const labels = trendData.map(d => d.date);
+    const scores = trendData.map(d => d.score);
+
+    new Chart(canvas.getContext("2d"), {
+      type: "line",
+      data: {
+        labels: labels,
+        datasets: [{
+          label: "Estimated Score",
+          data: scores,
+          borderColor: "#2E5A44",
+          backgroundColor: "rgba(46, 90, 68, 0.08)",
+          borderWidth: 2.5,
+          pointBackgroundColor: "#2E5A44",
+          pointRadius: 4,
+          pointHoverRadius: 6,
+          fill: true,
+          tension: 0.35
+        }]
+      },
+      options: {
+        responsive: true,
+        maintainAspectRatio: false,
+        scales: {
+          y: {
+            min: 300,
+            max: 900,
+            grid: { color: "rgba(0, 0, 0, 0.05)" },
+            ticks: { font: { size: 11, family: "Inter, sans-serif" } }
+          },
+          x: {
+            grid: { display: false },
+            ticks: { font: { size: 11, family: "Inter, sans-serif" } }
+          }
+        },
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            backgroundColor: "#1D1D1F",
+            titleFont: { size: 12, family: "Inter, sans-serif" },
+            bodyFont: { size: 12, family: "Inter, sans-serif" },
+            padding: 10,
+            cornerRadius: 8
+          }
+        }
+      }
+    });
+  } catch (e) {
+    console.error("Score trend chart error:", e);
+  }
+});
+</script>
 {% endblock %}

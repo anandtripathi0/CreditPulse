@@ -1,122 +1,139 @@
 {% extends "base.html" %}
-{% block title %}Welcome to CreditPulse - AI Loan Advisor{% endblock %}
+{% block title %}CreditPulse — Intelligent Credit & Risk Analytics{% endblock %}
 
 {% block content %}
 
-<div class="flex items-center gap-1.5">
-    <span class="relative flex h-2 w-2">
-        <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-500 opacity-75"></span>
-        <span class="relative inline-flex rounded-full h-2 w-2 bg-red-600"></span>
-    </span>
-    <span class="text-xs font-bold text-gray-700">TEAM-VECTOR X</span>
-</div>
+<div class="max-w-4xl mx-auto px-4 py-16 sm:py-24 text-center">
+    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-black/[0.03] border border-black/[0.05] mb-6">
+        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+        <span class="text-xs font-semibold text-[#1D1D1F] tracking-wide uppercase">ᴛᴇᴀᴍ - ᴠᴇᴄᴛᴏʀ x</span>
+    </div>
 
-<div class="max-w-6xl mx-auto px-4 py-12 md:py-20 text-center">
-    <h1 class="text-4xl md:text-6xl font-extrabold text-[#1F2E26] tracking-tight mb-6">
-        Decoding Financial Trust <span class="text-[#2E5A44]">Beyond the Traditional Credit Score </span>
+    <h1 class="text-4xl sm:text-6xl font-semibold text-[#1D1D1F] tracking-tight leading-[1.1] mb-6">
+        𝙵𝚒𝚗𝚊𝚗𝚌𝚒𝚊𝚕 𝙸𝚗𝚝𝚎𝚕𝚕𝚒𝚐𝚎𝚗𝚌𝚎.<br>
+        <span class="text-[#2E5A44]">𝙱𝚎𝚢𝚘𝚗𝚍 𝚃𝚛𝚊𝚍𝚒𝚝𝚒𝚘𝚗𝚊𝚕 𝙻𝚒𝚖𝚒𝚝𝚜.</span>
     </h1>
-    <p class="text-lg md:text-xl text-[#5C6E64] max-w-3xl mx-auto mb-10">
-        CreditPulse replaces traditional, slow banking processes with instant predictive analytics. Get real-time loan
-        evaluations and personalized financial advice powered by advanced AI.
+    <p class="text-base sm:text-xl text-[#86868B] max-w-2xl mx-auto font-normal leading-relaxed mb-10">
+        🇪‌🇽‌🇵‌🇪‌🇷‌🇮‌🇪‌🇳‌🇨‌🇪‌ 🇮‌🇳‌🇸‌🇹‌🇦‌🇳‌🇹‌ 🇵‌🇷‌🇪‌🇩‌🇮‌🇨‌🇹‌🇮‌🇻‌🇪‌ 🇱‌🇴‌🇦‌🇳‌ 🇦‌🇸‌🇸‌🇪‌🇸‌🇸‌🇲‌🇪‌🇳‌🇹‌ 🇼‌🇮‌🇹‌🇭‌ 🇨‌🇦‌🇱‌🇮‌🇧‌🇷‌🇦‌🇹‌🇪‌🇩‌ 🇲‌🇱‌ 🇲‌🇴‌🇩‌🇪‌🇱‌🇸‌ 🇦‌🇳‌🇩‌ 🇷‌🇪‌🇦‌🇱‌-🇹‌🇮‌🇲‌🇪‌ 🇬‌🇺‌🇮‌🇩‌🇦‌🇳‌🇨‌🇪‌. 🇸‌🇮‌🇲‌🇵‌🇱‌🇪‌, 🇫‌🇦‌🇸‌🇹‌, 🇦‌🇳‌🇩‌ 🇨‌🇴‌🇲‌🇵‌🇱‌🇪‌🇹‌🇪‌🇱‌🇾‌ 🇹‌🇷‌🇦‌🇳‌🇸‌🇵‌🇦‌🇷‌🇪‌🇳‌🇹‌.
     </p>
-    <div class="flex flex-col sm:flex-row justify-center gap-4">
+
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-3.5">
         <a href="/application"
-            class="bg-[#2E5A44] text-white px-8 py-4 rounded-xl font-bold hover:bg-[#244735] transition-colors shadow-lg text-lg">
-            Evaluate My Loan Now
+            class="btn-sage w-full sm:w-auto px-8 py-3.5 text-sm font-semibold tracking-wide shadow-md">
+            Start Credit Evaluation
         </a>
-        <a href="/dashboard"
-            class="bg-white text-[#2E5A44] border-2 border-[#2E5A44] px-8 py-4 rounded-xl font-bold hover:bg-[#FAFCFA] transition-colors text-lg">
-            View Analytics Dashboard
+        {% if user %}
+        <a href="/credit-dashboard"
+            class="btn-secondary w-full sm:w-auto px-8 py-3.5 text-sm font-medium">
+            Credit Dashboard
         </a>
+        {% else %}
+        <a href="/authenticate"
+            class="btn-secondary w-full sm:w-auto px-8 py-3.5 text-sm font-medium">
+            Sign In / Register
+        </a>
+        {% endif %}
     </div>
 </div>
 
-<div class="bg-[#FAFCFA] border-y border-[#E2E8E4] py-16 mt-8">
-    <div class="max-w-6xl mx-auto px-4">
+<a href="/credit-tools" class="block rounded-2xl bg-[#eff3ec] border border-[#dce6d4] p-7 mb-10 hover:shadow-md transition-shadow">
+    <span class="text-xs font-semibold tracking-widest text-[#2E5A44]">INTRODUCING CREDIT STUDIO ↗</span>
+    <h2 class="text-2xl font-semibold mt-2 mb-2">Plan your next financial move.</h2>
+    <p class="text-sm text-[#62736b]">EMI schedules, loan comparisons, debt payoff strategies, affordability, and card utilization — all in one workspace.</p>
+</a>
+
+<div class="bg-[#F5F5F7] rounded-3xl p-8 sm:p-14 mb-16 border border-black/[0.04]">
+    <div class="max-w-4xl mx-auto">
         <div class="text-center mb-12">
-            <h2 class="text-3xl font-bold text-[#1F2E26]">What is CreditPulse?</h2>
-            <div class="h-1 w-20 bg-[#2E5A44] mx-auto mt-4 rounded-full"></div>
+            <h2 class="text-2xl sm:text-3xl font-semibold text-[#1D1D1F] tracking-tight">How CreditPulse Works</h2>
+            <p class="text-xs sm:text-sm text-[#86868B] mt-1.5">Streamlined three-step loan risk evaluation</p>
         </div>
-        <div class="grid md:grid-cols-2 gap-12 items-center">
-            <div class="text-[#5C6E64] space-y-6 text-lg leading-relaxed">
-                <p>
-                    <strong>Navigating loan approvals shouldn't feel like a guessing game.</strong>
+
+        <div class="grid md:grid-cols-3 gap-6">
+            <div class="bg-white p-7 rounded-2xl border border-black/[0.06] shadow-sm hover:shadow-md transition-shadow">
+                <div class="w-10 h-10 rounded-full bg-[#2E5A44]/10 text-[#2E5A44] flex items-center justify-center font-bold text-sm mb-4">
+                    1
+                </div>
+                <h3 class="text-base font-semibold text-[#1D1D1F] mb-2">Submit Financial Data</h3>
+                <p class="text-xs text-[#86868B] leading-relaxed">
+                    Enter key income, collateral, and employment parameters securely without paperwork.
                 </p>
-                <p>
-                    <strong>CreditPulse</strong> is a next-generation platform designed to make financial decisions
-                    fast, fair, and completely transparent. We believe no applicant should be left in the dark. Instead
-                    of just giving you a 'yes' or 'no' using advanced machine learning, our built-in AI advisor explains
-                    the reasoning behind your results and offers personalized advice to help you improve your financial
-                    health.
             </div>
-            <div class="bg-white p-8 rounded-2xl shadow-sm border border-[#E2E8E4]">
-                <h3 class="text-xl font-bold text-[#1F2E26] mb-4">The Workflow:</h3>
-                <ul class="space-y-4">
-                    <li class="flex items-center gap-3">
-                        <span
-                            class="bg-[#2E5A44] text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">1</span>
-                        <span class="text-[#5C6E64]">Submit your financial details securely.</span>
-                    </li>
-                    <li class="flex items-center gap-3">
-                        <span
-                            class="bg-[#2E5A44] text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">2</span>
-                        <span class="text-[#5C6E64]">Our Model calculates risk in milliseconds.</span>
-                    </li>
-                    <li class="flex items-center gap-3">
-                        <span
-                            class="bg-[#2E5A44] text-white rounded-full w-8 h-8 flex items-center justify-center font-bold">3</span>
-                        <span class="text-[#5C6E64]">Get instant results and talk to our AI Advisor for guidance.</span>
-                    </li>
-                </ul>
+
+            <div class="bg-white p-7 rounded-2xl border border-black/[0.06] shadow-sm hover:shadow-md transition-shadow">
+                <div class="w-10 h-10 rounded-full bg-[#2E5A44]/10 text-[#2E5A44] flex items-center justify-center font-bold text-sm mb-4">
+                    2
+                </div>
+                <h3 class="text-base font-semibold text-[#1D1D1F] mb-2">AI Model Assessment</h3>
+                <p class="text-xs text-[#86868B] leading-relaxed">
+                    Our pre-trained ensemble model analyzes default probability and debt ratios in milliseconds.
+                </p>
+            </div>
+
+            <div class="bg-white p-7 rounded-2xl border border-black/[0.06] shadow-sm hover:shadow-md transition-shadow">
+                <div class="w-10 h-10 rounded-full bg-[#2E5A44]/10 text-[#2E5A44] flex items-center justify-center font-bold text-sm mb-4">
+                    3
+                </div>
+                <h3 class="text-base font-semibold text-[#1D1D1F] mb-2">Actionable Results</h3>
+                <p class="text-xs text-[#86868B] leading-relaxed">
+                    Get an instant decision with clear probability metrics and interactive advisory suggestions.
+                </p>
             </div>
         </div>
     </div>
 </div>
 
-<div class="max-w-6xl mx-auto px-4 py-20">
-    <div class="text-center mb-16">
-        <h2 class="text-3xl font-bold text-[#1F2E26]">Why Use CreditPulse?</h2>
+
+<div class="max-w-5xl mx-auto px-4 py-8 mb-16">
+    <div class="text-center mb-12">
+        <h2 class="text-2xl sm:text-3xl font-semibold text-[#1D1D1F] tracking-tight">Built for Precision</h2>
+        <p class="text-xs sm:text-sm text-[#86868B] mt-1.5">Modern fintech intelligence engineered for speed and clarity</p>
     </div>
 
-    <div class="grid md:grid-cols-3 gap-8">
-        <div class="bg-white p-8 rounded-2xl border border-[#E2E8E4] hover:shadow-md transition-shadow text-center">
-            <div class="w-16 h-16 bg-[#E2E8E4] rounded-full flex items-center justify-center mx-auto mb-6 text-2xl">
+    <div class="grid md:grid-cols-3 gap-6">
+        <div class="custom-card p-7 text-center">
+            <div class="w-12 h-12 bg-black/[0.03] rounded-2xl flex items-center justify-center mx-auto mb-4 text-xl">
                 ⚡
             </div>
-            <h3 class="text-xl font-bold text-[#1F2E26] mb-3">Instant Predictions</h3>
-            <p class="text-[#5C6E64]">Trained on thousands of historical records, our ML pipeline delivers highly
-                accurate risk assessments instantly.</p>
+            <h3 class="text-base font-semibold text-[#1D1D1F] mb-2">Instant Evaluation</h3>
+            <p class="text-xs text-[#86868B] leading-relaxed">
+                Trained on comprehensive historical records to predict risk profiles with high precision.
+            </p>
         </div>
 
-        <div class="bg-white p-8 rounded-2xl border border-[#E2E8E4] hover:shadow-md transition-shadow text-center">
-            <div class="w-16 h-16 bg-[#E2E8E4] rounded-full flex items-center justify-center mx-auto mb-6 text-2xl">
+        <div class="custom-card p-7 text-center">
+            <div class="w-12 h-12 bg-black/[0.03] rounded-2xl flex items-center justify-center mx-auto mb-4 text-xl">
                 🤖
             </div>
-            <h3 class="text-xl font-bold text-[#1F2E26] mb-3">24/7 AI Advisor</h3>
-            <p class="text-[#5C6E64]">Got rejected? Don't worry. Our integrated AI will analyze your profile and give
-                you actionable advice to improve.</p>
+            <h3 class="text-base font-semibold text-[#1D1D1F] mb-2">24/7 AI Advisor</h3>
+            <p class="text-xs text-[#86868B] leading-relaxed">
+                Contextual advice explaining application results and providing steps to optimize eligibility.
+            </p>
         </div>
 
-        <div class="bg-white p-8 rounded-2xl border border-[#E2E8E4] hover:shadow-md transition-shadow text-center">
-            <div class="w-16 h-16 bg-[#E2E8E4] rounded-full flex items-center justify-center mx-auto mb-6 text-2xl">
-                📊
+        <div class="custom-card p-7 text-center">
+            <div class="w-12 h-12 bg-black/[0.03] rounded-2xl flex items-center justify-center mx-auto mb-4 text-xl">
+                💳
             </div>
-            <h3 class="text-xl font-bold text-[#1F2E26] mb-3">Data-Driven Analytics</h3>
-            <p class="text-[#5C6E64]">Every application is securely stored in our cloud database, providing rich
-                analytics and historical tracking.</p>
+            <h3 class="text-base font-semibold text-[#1D1D1F] mb-2">Credit Dashboard</h3>
+            <p class="text-xs text-[#86868B] leading-relaxed">
+                Track utilization ratios, simulate purchases, and explore credit capacity in one place.
+            </p>
         </div>
     </div>
 </div>
 
-<div class="bg-[#2E5A44] text-white py-16 text-center">
-    <div class="max-w-3xl mx-auto px-4">
-        <h2 class="text-3xl font-bold mb-6">Have any doubts or need financial guidance?</h2>
-        <p class="mb-8 opacity-90 text-lg">Feel free to ask our 24/7 AI Advisor! Get personalized advice on loans,
-            credit scores, and financial health instantly.</p>
 
-        <a href="/help-center"
-            class="bg-white text-[#2E5A44] px-10 py-4 rounded-xl font-bold hover:bg-[#FAFCFA] transition-colors shadow-lg text-lg inline-flex items-center justify-center gap-3">
-            <span class="text-2xl">🤖</span> Talk to AI Advisor
+<div class="bg-[#2E5A44] rounded-3xl p-10 sm:p-14 text-white text-center shadow-lg relative overflow-hidden mb-12">
+    <div class="max-w-2xl mx-auto relative z-10">
+        <h2 class="text-2xl sm:text-3xl font-semibold tracking-tight mb-3">Ready to evaluate your loan?</h2>
+        <p class="text-xs sm:text-sm text-white/80 font-normal leading-relaxed mb-8">
+            Experience fair, transparent, and instant credit decisioning in seconds.
+        </p>
+
+        <a href="/application"
+            class="inline-flex items-center justify-center bg-white text-[#2E5A44] px-8 py-3.5 rounded-full font-semibold hover:bg-gray-100 transition-colors shadow-md text-xs tracking-wide">
+            Start Evaluation Now
         </a>
     </div>
 </div>

@@ -3,13 +3,11 @@
 {% block title %}Evaluation Result - CreditPulse{% endblock %}
 
 {% block content %}
-<div class="max-w-3xl mx-auto space-y-6">
+<div class="max-w-2xl mx-auto space-y-6 py-6 sm:py-10">
 
-
-  <div
-    class="custom-card rounded-2xl p-8 text-center border-t-4 {% if status == 'Approved' %}border-emerald-600{% else %}border-rose-600{% endif %}">
-    <div
-      class="inline-flex items-center justify-center w-16 h-16 rounded-full mb-4 {% if status == 'Approved' %}bg-emerald-50 text-emerald-600{% else %}bg-rose-50 text-rose-600{% endif %}">
+  <div class="custom-card p-8 sm:p-12 text-center">
+    
+    <div class="inline-flex items-center justify-center w-16 h-16 rounded-full mb-5 {% if status == 'Approved' %}bg-emerald-50 text-emerald-600{% else %}bg-rose-50 text-rose-600{% endif %}">
       {% if status == 'Approved' %}
       <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M5 13l4 4L19 7"></path>
@@ -21,43 +19,57 @@
       {% endif %}
     </div>
 
-    <h1 class="text-3xl font-bold tracking-tight text-[#1F2E26]">Loan {{ status }}</h1>
-    <p class="text-sm text-[#5C6E64] mt-2 max-w-md mx-auto">
+
+    <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-semibold mb-3 bg-emerald-50 border border-emerald-200 text-emerald-800">
+      <span>✓</span>
+      <span>Evaluation completed and saved to your history.</span>
+    </div>
+
+    <h1 class="text-3xl sm:text-4xl font-semibold tracking-tight text-[#1D1D1F]">
+      Loan {{ status }}
+    </h1>
+
+    <p class="text-sm text-[#86868B] mt-2 max-w-md mx-auto leading-relaxed">
       {% if status == 'Approved' %}
-      The application meets risk thresholds and is recommended for underwriting approval.
+      The application meets calibrated risk parameters and is recommended for underwriting approval.
       {% else %}
-      High risk indicators were detected. The loan is not approved under standard parameters.
+      Elevated credit risk factors were detected. The application is not eligible under baseline criteria.
       {% endif %}
     </p>
 
-    <div class="grid grid-cols-2 gap-4 mt-8 pt-6 border-t border-[#E2E8E4]">
-      <div class="bg-[#FAFCFA] p-4 rounded-xl border border-[#E2E8E4]">
-        <span class="block text-xs font-medium text-[#5C6E64]">Confidence Score</span>
-        <span class="text-2xl font-bold text-[#2E5A44]">{{ (probability * 100) | round(1) }}%</span>
+
+    <div class="grid grid-cols-2 gap-4 mt-8 pt-8 border-t border-black/[0.06]">
+      <div class="bg-[#F5F5F7] p-5 rounded-2xl border border-black/[0.04]">
+        <span class="block text-xs font-semibold text-[#86868B] uppercase tracking-wider mb-1">Confidence</span>
+        <span class="text-2xl sm:text-3xl font-bold text-[#2E5A44]">{{ (probability * 100) | round(1) }}%</span>
       </div>
-      <div class="bg-[#FAFCFA] p-4 rounded-xl border border-[#E2E8E4]">
-        <span class="block text-xs font-medium text-[#5C6E64]">Risk Profile</span>
-        <span
-          class="text-2xl font-bold {% if status == 'Approved' %}text-emerald-700{% else %}text-rose-700{% endif %}">
-          {% if status == 'Approved' %}Low - Medium{% else %}High Risk{% endif %}
+      <div class="bg-[#F5F5F7] p-5 rounded-2xl border border-black/[0.04]">
+        <span class="block text-xs font-semibold text-[#86868B] uppercase tracking-wider mb-1">Risk Assessment</span>
+        <span class="text-2xl sm:text-3xl font-bold {% if status == 'Approved' %}text-emerald-700{% else %}text-rose-700{% endif %}">
+          {% if status == 'Approved' %}Low Risk{% else %}High Risk{% endif %}
         </span>
       </div>
     </div>
   </div>
 
-
-  <div class="flex justify-center space-x-4 pt-2">
-    <a href="/" class="btn-sage px-6 py-2.5 rounded-lg text-xs font-semibold">New Application</a>
-    <a href="/dashboard"
-      class="bg-white border border-[#E2E8E4] text-[#1F2E26] hover:bg-[#FAFCFA] px-6 py-2.5 rounded-lg text-xs font-semibold transition">View
-      All Records</a>
+  <div class="flex flex-col sm:flex-row justify-center gap-3 pt-2">
+    <a href="/application" class="btn-sage px-6 py-3 text-xs font-semibold tracking-wide">
+      Evaluate Another Loan
+    </a>
+    <a href="/history" class="btn-secondary px-6 py-3 text-xs font-semibold">
+      View in Complete History
+    </a>
+    <a href="/dashboard" class="px-6 py-3 text-xs font-medium text-[#86868B] hover:text-[#1D1D1F] transition text-center">
+      Dashboard
+    </a>
   </div>
 </div>
 
 
-<div id="chatWidget" class="fixed bottom-6 right-6 z-50">
+<div id="chatWidget" class="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50">
   <button id="openChatBtn"
-    class="btn-sage w-14 h-14 rounded-full shadow-2xl flex items-center justify-center text-white focus:outline-none transition-transform hover:scale-105">
+    class="btn-sage w-12 h-12 sm:w-14 sm:h-14 rounded-full shadow-xl flex items-center justify-center text-white focus:outline-none transition-transform hover:scale-105"
+    aria-label="Open AI Advisor Chat">
     <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
         d="M8 10h.01M12 10h.01M16 10h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z">
@@ -66,29 +78,26 @@
   </button>
 
   <div id="chatBox"
-    class="hidden custom-card w-80 md:w-96 rounded-2xl shadow-2xl flex flex-col h-[460px] overflow-hidden border border-[#E2E8E4] bg-white">
+    class="hidden custom-card w-[calc(100vw-32px)] sm:w-96 shadow-2xl flex flex-col h-[460px] overflow-hidden border border-black/[0.08] bg-white">
 
-    <div class="bg-[#2E5A44] text-white p-4 flex justify-between items-center shadow-sm">
+    <div class="bg-[#2E5A44] text-white p-4 flex justify-between items-center">
       <div>
-        <h3 class="font-semibold text-sm">CreditPulse Advisor</h3>
-        <p class="text-[11px] text-[#DDE7E1]">Live Loan Eligibility Guidance</p>
+        <h3 class="font-semibold text-sm">CreditPulse AI Advisor</h3>
+        <p class="text-[11px] text-white/80">Interactive Loan Eligibility Guidance</p>
       </div>
-      <button id="closeChatBtn" class="text-white hover:text-gray-200 text-2xl leading-none">&times;</button>
+      <button id="closeChatBtn" class="text-white hover:text-white/80 text-2xl leading-none">&times;</button>
     </div>
 
-
-    <div id="chatMessages" class="flex-grow p-4 overflow-y-auto space-y-3 text-xs bg-[#FAFCFA]">
-      <div class="bg-white border border-[#E2E8E4] p-3 rounded-lg text-[#1F2E26] shadow-sm">
-        Hello! I can explain why your application resulted in <strong>{{ status }}</strong> and suggest ways to improve
-        your approval chances. What would you like to know?
+    <div id="chatMessages" class="flex-grow p-4 overflow-y-auto space-y-3 text-xs bg-[#F5F5F7]">
+      <div class="bg-white border border-black/[0.06] p-3.5 rounded-2xl text-[#1D1D1F] shadow-xs leading-relaxed">
+        Hello! I can explain why your evaluation resulted in <strong>{{ status }}</strong> and suggest actionable steps to enhance your approval probability. What would you like to know?
       </div>
     </div>
 
-
-    <form id="chatForm" class="p-3 border-t border-[#E2E8E4] flex gap-2 bg-white">
-      <input type="text" id="chatInput" placeholder="Ask e.g., How can I get approved?"
-        class="input-sage flex-grow px-3 py-2 rounded-lg text-xs" autocomplete="off" required />
-      <button type="submit" class="btn-sage px-3 py-2 rounded-lg text-xs font-semibold">Send</button>
+    <form id="chatForm" class="p-3 border-t border-black/[0.06] flex gap-2 bg-white">
+      <input type="text" id="chatInput" placeholder="Ask e.g., How can I improve my score?"
+        class="input-sage flex-grow px-3.5 py-2.5 rounded-xl text-xs" autocomplete="off" required />
+      <button type="submit" class="btn-sage px-4 py-2 text-xs font-semibold">Send</button>
     </form>
   </div>
 </div>

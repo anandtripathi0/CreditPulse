@@ -1,0 +1,502 @@
+.studio {
+    --forest: #214f3d;
+    --muted: #62736b;
+    color: #20382e
+}
+
+.studio-hero {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 70px;
+    background: #eff3ec;
+    border-radius: 26px;
+    padding: 54px;
+    margin-bottom: 20px
+}
+
+.eyebrow {
+    font-size: 10px;
+    letter-spacing: 1.8px;
+    font-weight: 700
+}
+
+.studio h1 {
+    font-size: clamp(36px, 4.3vw, 58px);
+    line-height: 1.08;
+    letter-spacing: -2px;
+    margin: 22px 0
+}
+
+.studio h1 em {
+    font-family: Georgia, serif;
+    font-weight: 400
+}
+
+.studio-hero p {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--muted);
+    max-width: 430px
+}
+
+.studio-button {
+    border: 0;
+    background: var(--forest);
+    color: white;
+    border-radius: 9px;
+    padding: 14px 20px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 30px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 22px
+}
+
+.studio-button:disabled {
+    opacity: .55;
+    cursor: wait
+}
+
+.hero-note {
+    background: #214f3d;
+    color: #e9f0df;
+    border-radius: 16px;
+    padding: 30px;
+    transform: rotate(2deg);
+    box-shadow: 0 14px 35px #214f3d16
+}
+
+.hero-note strong {
+    display: block;
+    font: 30px/1.2 Georgia, serif;
+    margin: 20px 0
+}
+
+.hero-note>div {
+    border-top: 1px solid #ffffff26;
+    padding: 12px 0;
+    font-size: 13px
+}
+
+.hero-note>div span {
+    color: #b6ce9a;
+    margin-right: 14px
+}
+
+.hero-note p {
+    color: #cedccb;
+    font-size: 11px;
+    margin-top: 12px
+}
+
+.studio-links {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 8px;
+    margin-bottom: 36px;
+    font-size: 12px;
+    font-weight: 600;
+    flex-wrap: wrap
+}
+
+.studio-links a:hover,
+.learning a:hover {
+    text-decoration: underline
+}
+
+.workspace {
+    border: 1px solid #dfe7df;
+    border-radius: 20px;
+    overflow: hidden;
+    scroll-margin-top: 85px
+}
+
+.workspace-title {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 28px;
+    gap: 20px
+}
+
+.studio h2 {
+    font-size: 23px;
+    letter-spacing: -.6px;
+    font-weight: 600;
+    margin-top: 8px
+}
+
+.sample-tag {
+    font-size: 10px;
+    background: #eef3eb;
+    padding: 8px 12px;
+    border-radius: 20px;
+    white-space: nowrap
+}
+
+.tool-tabs {
+    display: flex;
+    overflow-x: auto;
+    background: #f7f9f5;
+    border-top: 1px solid #e2e8df;
+    border-bottom: 1px solid #e2e8df;
+    padding: 0 20px
+}
+
+.tool-tabs button {
+    padding: 17px 16px;
+    white-space: nowrap;
+    font-size: 12px;
+    border-bottom: 3px solid transparent;
+    cursor: pointer
+}
+
+.tool-tabs button[aria-selected=true] {
+    border-color: #214f3d;
+    color: #214f3d;
+    font-weight: 700
+}
+
+.tool-layout {
+    display: grid;
+    grid-template-columns: 1fr 1fr
+}
+
+.tool-layout form {
+    padding: 30px
+}
+
+.studio h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 9px
+}
+
+.muted,
+.tool-results>p {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.7;
+    margin-bottom: 20px
+}
+
+.field-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px
+}
+
+.studio label {
+    display: block;
+    font-size: 11px;
+    font-weight: 600
+}
+
+.studio input {
+    display: block;
+    width: 100%;
+    margin-top: 7px;
+    border: 1px solid #d9e1d7;
+    padding: 11px;
+    border-radius: 7px;
+    background: white;
+    color: #20382e;
+    font-size: 13px
+}
+
+.studio :focus-visible {
+    outline: 3px solid #88ad65;
+    outline-offset: 3px
+}
+
+.studio fieldset {
+    border: 1px solid #e1e7df;
+    border-radius: 10px;
+    padding: 15px;
+    margin: 16px 0
+}
+
+.studio legend {
+    padding: 0 5px;
+    font-size: 12px;
+    font-weight: 700
+}
+
+.tool-results {
+    padding: 30px;
+    background: #f5f7f1;
+    border-left: 1px solid #e2e8df;
+    min-width: 0
+}
+
+.tool-results h3 {
+    margin-top: 20px
+}
+
+.metric-primary {
+    font-size: 39px;
+    font-weight: 600;
+    letter-spacing: -1.5px;
+    margin: 8px 0 20px
+}
+
+.metric-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px
+}
+
+.metric {
+    padding: 14px 0;
+    border-top: 1px solid #d9e2d3
+}
+
+.metric small {
+    display: block;
+    color: var(--muted);
+    font-size: 11px
+}
+
+.metric strong {
+    display: block;
+    font-size: 18px;
+    margin-top: 5px
+}
+
+.result-note {
+    font-size: 12px;
+    line-height: 1.7;
+    background: #e6eddd;
+    border-radius: 8px;
+    padding: 12px;
+    margin-top: 18px
+}
+
+.table-scroll {
+    overflow: auto;
+    max-height: 280px;
+    margin-top: 16px
+}
+
+.studio table {
+    width: 100%;
+    font-size: 11px;
+    border-collapse: collapse;
+    white-space: nowrap
+}
+
+.studio th,
+.studio td {
+    padding: 10px;
+    text-align: right;
+    border-bottom: 1px solid #dce3d6
+}
+
+.studio th {
+    position: sticky;
+    top: 0;
+    background: #edf2e7
+}
+
+.secondary-button {
+    font-size: 12px;
+    border: 1px solid #afc2a4;
+    border-radius: 7px;
+    padding: 9px 12px;
+    margin-top: 12px;
+    cursor: pointer
+}
+
+.empty-art {
+    display: flex;
+    height: 160px;
+    align-items: end;
+    gap: 15px;
+    margin-top: 30px
+}
+
+.empty-art i {
+    flex: 1;
+    background: #dae5ce;
+    border-radius: 7px 7px 0 0;
+    height: 25%
+}
+
+.empty-art i:nth-child(2) {
+    height: 40%
+}
+
+.empty-art i:nth-child(3) {
+    height: 58%
+}
+
+.empty-art i:nth-child(4) {
+    height: 76%
+}
+
+.empty-art i:nth-child(5) {
+    height: 100%;
+    background: #8ca778
+}
+
+.learning {
+    margin: 50px 0 30px
+}
+
+.learning-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+    margin-top: 25px
+}
+
+.learning article {
+    border-top: 2px solid #dce6d4;
+    padding-top: 20px
+}
+
+.learning article>span {
+    font-size: 10px;
+    color: var(--muted);
+    letter-spacing: 1px
+}
+
+.learning h3 {
+    font-size: 16px;
+    margin-top: 12px
+}
+
+.learning p {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.8
+}
+
+.learning a {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    margin-top: 14px
+}
+
+.studio-disclaimer {
+    font-size: 11px;
+    color: var(--muted);
+    line-height: 1.8;
+    border-top: 1px solid #e0e6dc;
+    padding-top: 20px
+}
+
+#tool-error {
+    font-size: 12px;
+    color: #a03030;
+    margin-top: 12px
+}
+
+.result-bar {
+    display: flex;
+    height: 12px;
+    border-radius: 9px;
+    overflow: hidden;
+    background: #d2dec5;
+    margin: 20px 0
+}
+
+.result-bar span {
+    background: #214f3d
+}
+
+.result-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center
+}
+
+.result-heading span {
+    font-size: 10px;
+    background: #d9e8cd;
+    padding: 5px 8px;
+    border-radius: 15px
+}
+
+@media(max-width:760px) {
+    .studio-hero {
+        grid-template-columns: 1fr;
+        padding: 30px;
+        gap: 30px
+    }
+
+    .hero-note {
+        transform: none
+    }
+
+    .tool-layout {
+        grid-template-columns: 1fr
+    }
+
+    .tool-results {
+        border-left: 0;
+        border-top: 1px solid #e2e8df
+    }
+
+    .learning-grid {
+        grid-template-columns: 1fr
+    }
+
+    .workspace-title {
+        align-items: start;
+        flex-direction: column
+    }
+
+    .studio-links {
+        display: grid;
+        grid-template-columns: 1fr 1fr
+    }
+
+    .tool-layout form,
+    .tool-results {
+        padding: 22px
+    }
+}
+
+@media(max-width:380px) {
+
+    .field-grid,
+    .metric-grid {
+        grid-template-columns: 1fr
+    }
+
+    .studio-hero {
+        padding: 22px
+    }
+}
+
+@media print {
+
+    nav,
+    footer,
+    #tool-form,
+    .tool-tabs,
+    .studio-hero,
+    .learning,
+    .studio-links,
+    .workspace-title {
+        display: none !important
+    }
+
+    .tool-layout {
+        display: block
+    }
+
+    .tool-results {
+        border: 0
+    }
+
+    .table-scroll {
+        max-height: none
+    }
+}

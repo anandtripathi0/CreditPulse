@@ -1,0 +1,235 @@
+{% extends "base.html" %}
+
+{% block title %}Evaluation History - CreditPulse{% endblock %}
+
+{% block content %}
+<div class="space-y-8 py-2">
+
+  <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+    <div>
+      <div class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-[#2E5A44]/10 text-[#2E5A44] text-xs font-semibold mb-2">
+        <span class="w-1.5 h-1.5 rounded-full bg-[#2E5A44]"></span>
+        Historical Records
+      </div>
+      <h1 class="text-2xl sm:text-3xl font-bold tracking-tight text-[#1D1D1F]">Complete Evaluation History</h1>
+      <p class="text-sm text-[#86868B] mt-1">Audit log of all automated credit evaluations requested by your account.</p>
+    </div>
+
+    <div class="flex items-center gap-2.5">
+      <button onclick="refreshHistory()" id="btnRefreshHistory" class="px-4 py-2.5 text-xs font-semibold text-[#1D1D1F] bg-[#F5F5F7] hover:bg-black/[0.05] rounded-full transition inline-flex items-center gap-1.5 cursor-pointer border border-black/[0.06]">
+        <svg class="w-3.5 h-3.5" id="refreshSpinner" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>
+        <span>Refresh</span>
+      </button>
+      <a href="/application" class="btn-sage px-5 py-2.5 text-xs font-semibold tracking-wide inline-flex items-center gap-2">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+        <span>New Evaluation</span>
+      </a>
+    </div>
+  </div>
+
+
+  <div class="card-premium overflow-hidden" id="historyCard">
+    <div class="px-6 py-4 border-b border-black/[0.06] flex items-center justify-between bg-[#F5F5F7]/40">
+      <span class="text-xs font-bold uppercase tracking-wider text-[#1D1D1F]">Evaluations Log</span>
+      <span class="text-xs text-[#86868B]" id="evaluationsCount">
+        {{ evaluations|length }} total evaluation{{ 's' if evaluations|length != 1 else '' }}
+      </span>
+    </div>
+
+
+    <div id="historyErrorBox" class="{% if not history_error %}hidden{% endif %} p-10 text-center space-y-3 bg-rose-50/70 border-b border-rose-100">
+      <div class="w-10 h-10 rounded-full bg-rose-100 text-rose-700 flex items-center justify-center mx-auto font-bold text-base">⚠️</div>
+      <div class="text-sm font-semibold text-rose-800" id="historyErrorMessage">
+        {{ history_error or "Unable to load your history. Please try again." }}
+      </div>
+      <button onclick="refreshHistory()" class="btn-sage px-5 py-2 text-xs font-semibold">Retry</button>
+    </div>
+
+
+    <div id="historyTableWrapper" class="overflow-x-auto {% if not evaluations or evaluations|length == 0 or history_error %}hidden{% endif %}">
+      <table class="w-full text-left text-xs text-[#1D1D1F]">
+        <thead class="bg-[#F5F5F7] text-[#86868B] uppercase font-semibold text-[10px] tracking-wider border-b border-black/[0.06]">
+          <tr>
+            <th class="px-6 py-3.5">Date & Time</th>
+            <th class="px-6 py-3.5">Type & Purpose</th>
+            <th class="px-6 py-3.5">Monthly Income</th>
+            <th class="px-6 py-3.5">Loan Amount</th>
+            <th class="px-6 py-3.5">Score Input</th>
+            <th class="px-6 py-3.5">AI Confidence</th>
+            <th class="px-6 py-3.5">Decision</th>
+            <th class="px-6 py-3.5 text-right">Actions</th>
+          </tr>
+        </thead>
+        <tbody class="divide-y divide-black/[0.04]" id="historyTableBody">
+          {% for ev in evaluations %}
+          <tr class="hover:bg-black/[0.015] transition">
+            <td class="px-6 py-4 text-[#86868B] whitespace-nowrap">
+              {{ ev.formatted_date }}
+            </td>
+            <td class="px-6 py-4 font-semibold text-[#1D1D1F]">
+              <div>{{ ev.applicant_data.Loan_Purpose or 'Personal Loan' }}</div>
+              <div class="text-[10px] text-[#86868B] font-normal">
+                {{ ev.applicant_data.Education_Level or ev.applicant_data.Education or 'Applicant' }} • {{ ev.applicant_data.Employment_Status or ev.applicant_data.Employment_Type or 'Salaried' }}
+              </div>
+            </td>
+            <td class="px-6 py-4 text-[#1D1D1F]">
+              ₹{{ ev.applicant_data.Applicant_Income }}
+            </td>
+            <td class="px-6 py-4 font-medium text-[#1D1D1F]">
+              ₹{{ ev.applicant_data.Loan_Amount }}
+            </td>
+            <td class="px-6 py-4 text-[#86868B]">
+              {{ ev.applicant_data.Credit_Score }}
+            </td>
+            <td class="px-6 py-4 font-medium">
+              {{ ((ev.prediction.probability or ev.result.probability or 0) * 100) | round(1) }}%
+            </td>
+            <td class="px-6 py-4">
+              {% set status_val = ev.prediction.status or ev.result.status or 'Unknown' %}
+              <span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider {% if status_val == 'Approved' %}bg-emerald-100 text-emerald-800{% else %}bg-rose-100 text-rose-800{% endif %}">
+                {{ status_val }}
+              </span>
+            </td>
+            <td class="px-6 py-4 text-right whitespace-nowrap">
+              <div class="inline-flex items-center gap-3">
+                <a href="/record/{{ ev._id }}" class="text-[#2E5A44] font-semibold hover:underline">
+                  View Details
+                </a>
+                <button type="button" onclick='rerunEvaluation({{ ev.applicant_data | tojson | safe }})' class="text-[#86868B] hover:text-[#1D1D1F] font-medium transition cursor-pointer" title="Pre-fill form to re-evaluate">
+                  Re-run
+                </button>
+              </div>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+
+    <div id="historyEmptyState" class="{% if evaluations and evaluations|length > 0 or history_error %}hidden{% endif %} p-12 text-center space-y-4">
+      <div class="w-16 h-16 rounded-full bg-[#F5F5F7] border border-black/[0.06] flex items-center justify-center mx-auto text-[#86868B]">
+        <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+      </div>
+      <div class="space-y-1">
+        <h2 class="text-base font-bold text-[#1D1D1F]">No evaluations yet</h2>
+        <p class="text-xs text-[#86868B] max-w-sm mx-auto">
+          Whenever you evaluate loan proposals while logged into your account, they will be archived here for instant review.
+        </p>
+      </div>
+      <div class="pt-2">
+        <a href="/application" class="btn-sage px-6 py-2.5 text-xs font-semibold tracking-wide">
+          Start Your First Evaluation
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function rerunEvaluation(data) {
+  if (!data) return;
+  try {
+    localStorage.setItem("pending_evaluation_data", JSON.stringify(data));
+    window.location.href = "/application";
+  } catch (e) {
+    console.error("Could not set rerun data:", e);
+    window.location.href = "/application";
+  }
+}
+
+async function refreshHistory() {
+  const spinner = document.getElementById("refreshSpinner");
+  if (spinner) spinner.classList.add("animate-spin");
+
+  const errorBox = document.getElementById("historyErrorBox");
+  const errorMsg = document.getElementById("historyErrorMessage");
+  const emptyState = document.getElementById("historyEmptyState");
+  const tableWrapper = document.getElementById("historyTableWrapper");
+  const tableBody = document.getElementById("historyTableBody");
+  const countSpan = document.getElementById("evaluationsCount");
+
+  try {
+    const token = localStorage.getItem("creditpulse_token");
+    const headers = {};
+    if (token) headers["Authorization"] = `Bearer ${token}`;
+
+    const res = await fetch("/api/user/history?limit=100", { headers });
+    if (!res.ok) {
+      const err = await res.json().catch(() => ({}));
+      throw new Error(err.detail || "Unable to load your history. Please try again.");
+    }
+
+    const data = await res.json();
+    const records = data.records || [];
+
+    errorBox.classList.add("hidden");
+
+    if (countSpan) {
+      countSpan.textContent = `${records.length} total evaluation${records.length !== 1 ? 's' : ''}`;
+    }
+
+    if (records.length === 0) {
+      tableWrapper.classList.add("hidden");
+      emptyState.classList.remove("hidden");
+    } else {
+      emptyState.classList.add("hidden");
+      tableWrapper.classList.remove("hidden");
+
+      tableBody.innerHTML = records.map(ev => {
+        const app = ev.applicant_data || ev.application_data || {};
+        const pred = ev.prediction || ev.result || {};
+        const prob = ((pred.probability || 0) * 100).toFixed(1);
+        const st = pred.status || 'Unknown';
+        const stClass = st === 'Approved' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800';
+
+        return `
+          <tr class="hover:bg-black/[0.015] transition">
+            <td class="px-6 py-4 text-[#86868B] whitespace-nowrap">${ev.formatted_date || 'N/A'}</td>
+            <td class="px-6 py-4 font-semibold text-[#1D1D1F]">
+              <div>${app.Loan_Purpose || 'Personal Loan'}</div>
+              <div class="text-[10px] text-[#86868B] font-normal">
+                ${app.Education_Level || app.Education || 'Applicant'} • ${app.Employment_Status || app.Employment_Type || 'Salaried'}
+              </div>
+            </td>
+            <td class="px-6 py-4 text-[#1D1D1F]">₹${app.Applicant_Income ?? ''}</td>
+            <td class="px-6 py-4 font-medium text-[#1D1D1F]">₹${app.Loan_Amount ?? ''}</td>
+            <td class="px-6 py-4 text-[#86868B]">${app.Credit_Score ?? ''}</td>
+            <td class="px-6 py-4 font-medium">${prob}%</td>
+            <td class="px-6 py-4">
+              <span class="px-2.5 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${stClass}">
+                ${st}
+              </span>
+            </td>
+            <td class="px-6 py-4 text-right whitespace-nowrap">
+              <div class="inline-flex items-center gap-3">
+                <a href="/record/${ev._id}" class="text-[#2E5A44] font-semibold hover:underline">View Details</a>
+                <button type="button" onclick='rerunEvaluation(${JSON.stringify(app).replace(/'/g, "&#39;")})' class="text-[#86868B] hover:text-[#1D1D1F] font-medium transition cursor-pointer" title="Pre-fill form to re-evaluate">Re-run</button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+  } catch (err) {
+    console.error("History fetch error:", err);
+    tableWrapper.classList.add("hidden");
+    emptyState.classList.add("hidden");
+    if (errorMsg) errorMsg.textContent = "Unable to load your history. Please try again.";
+    errorBox.classList.remove("hidden");
+  } finally {
+    if (spinner) spinner.classList.remove("animate-spin");
+  }
+}
+
+
+document.addEventListener("DOMContentLoaded", () => {
+  if (sessionStorage.getItem("latest_eval_saved") === "true") {
+    sessionStorage.removeItem("latest_eval_saved");
+    refreshHistory();
+  }
+});
+</script>
+{% endblock %}
